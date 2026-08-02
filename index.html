@@ -76,19 +76,19 @@
   .name-cycle { display: inline-block; height: 1.4em; line-height: 1.4em; vertical-align: top; overflow: visible; }
   .nc-new { line-height: 1.4em; }
   .name-cycle { position: relative; }
-  .nc-old { display: inline-block; transform-origin: 50% 100%; }
+  .nc-old { display: inline-block; transform-origin: 50% 72%; }
   .nc-new {
     position: absolute;
     left: 0;
     bottom: 0;
     transform: translateY(-1.3em);
     opacity: 0;
-    transform-origin: 50% 100%;
+    transform-origin: 50% 72%;
     white-space: nowrap;
     pointer-events: none;
   }
   .name-cycle.dropping .nc-new { animation: nc-drop 560ms ease-in-out forwards; }
-  .bang { display: inline-block; transform-origin: 50% 100%; }
+  .bang { display: inline-block; transform-origin: 50% 100%; margin-left: 0.09em; }
   .bang.grow { animation: bang-scoot 560ms ease-in-out; }
   .bang.shrink { animation: bang-scoot-rev 560ms ease-in-out; }
   @keyframes bang-scoot-rev {
