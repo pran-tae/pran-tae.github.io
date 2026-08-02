@@ -8,6 +8,7 @@ import html
 import json
 import os
 import re
+import subprocess
 import sys
 import urllib.error
 import urllib.parse
@@ -46,32 +47,28 @@ def replace_block(text, start_marker, end_marker, new_inner):
 
 
 def refresh_flicks(index):
-    """Films from the profile's /films/ page (sorted by date added, i.e. rating
-    activity), not the diary RSS: rating without a diary entry still counts."""
-    page = fetch(f"https://letterboxd.com/{LETTERBOXD_USER}/films/")
-    items = re.findall(r'<li class="griditem">(.*?)</li>', page, re.S)
+    """Films by rating date, via a real browser (the sort pages 403 plain HTTP)."""
+    helper = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fetch_rated.mjs")
+    out = subprocess.run(["node", helper], capture_output=True, text=True, timeout=180)
+    if out.returncode != 0:
+        raise RuntimeError("letterboxd browser fetch failed: " + out.stderr.strip()[:300])
     films = []
-    for it in items:
-        slug = re.search(r'data-item-slug="([^"]+)"', it)
-        name = re.search(r'data-item-name="([^"]+)"', it)
-        if not (slug and name):
-            continue
-        rating = re.search(r"rated-(\d+)", it)
-        title = re.sub(r"\s*\(\d{4}\)$", "", html.unescape(name.group(1)))
+    for item in json.loads(out.stdout):
+        title = re.sub(r"\s*\(\d{4}\)$", "", html.unescape(item["name"]))
         films.append({
-            "slug": slug.group(1),
+            "slug": item["slug"],
             "title": title,
-            "stars": stars(int(rating.group(1)) / 2) if rating else "",
+            "stars": stars(item["rating"] / 2) if item.get("rating") else "",
         })
         if len(films) == SHELF_SIZE:
             break
     if not films:
-        raise RuntimeError("no films parsed from the films page")
+        raise RuntimeError("no films in the rated-date list")
 
     lines = []
     for n, f in enumerate(films):
         film_page = fetch(f"https://letterboxd.com/film/{f['slug']}/")
-        m = re.search(r'"image":"(https://a\.ltrbxd\.com/resized/film-poster/[^"]+)"', film_page)
+        m = re.search(r'"image":"(https://a\.ltrbxd\.com/resized/[^"]+)"', film_page)
         if not m:
             raise RuntimeError(f"no poster for {f['slug']}")
         data = fetch(m.group(1), binary=True)

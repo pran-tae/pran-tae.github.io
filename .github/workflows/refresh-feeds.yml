@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install a real browser (Letterboxd's sort pages 403 plain HTTP)
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
       - name: Refresh flicks and jams
         env:
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
