@@ -518,9 +518,9 @@
     let lastFocus = [0, false];
 
     function measure() {
+      // .shelf has perspective, so it is the cases' offsetParent: offsetLeft is already shelf-relative
       const ox = shelfEl.offsetWidth * ORIGIN_X;
-      const base = shelfEl.offsetLeft;
-      centers = caseEls.map((c) => c.offsetLeft - base + c.offsetWidth / 2 - ox);
+      centers = caseEls.map((c) => c.offsetLeft + c.offsetWidth / 2 - ox);
     }
 
     function refan(h, hot) {
