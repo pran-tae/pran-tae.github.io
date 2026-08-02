@@ -236,37 +236,46 @@
     width: 176px;
     height: 176px;
     border: 1px solid var(--rule);
-    border-radius: 14px;
-    background: var(--ground);
-    box-shadow: 0 3px 10px rgba(20, 30, 20, 0.08);
+    border-radius: 16px;
+    background: linear-gradient(145deg, #FDFCF6, #F1EFE4);
+    box-shadow:
+      0 5px 14px rgba(20, 30, 20, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.85),
+      inset 0 -1px 0 rgba(20, 30, 20, 0.05);
     z-index: 1;
     pointer-events: none;
   }
   .tt::before {
     content: "";
     position: absolute;
-    inset: 5px;
+    inset: 9px;
     border-radius: 50%;
-    background-image:
-      radial-gradient(circle at 50% 50%, #1B2A1F 0 71px, transparent 71.5px),
-      repeating-conic-gradient(from 0deg, rgba(251, 250, 247, 0.4) 0deg 1.6deg, transparent 1.6deg 7.2deg);
-    background-color: #24382A;
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.28);
-    animation: platter-spin 3.62s linear infinite;
+    background: radial-gradient(circle at 50% 42%, #24382A, #16241B 72%);
+    box-shadow:
+      inset 0 2px 8px rgba(0, 0, 0, 0.45),
+      inset 0 0 0 2px rgba(0, 0, 0, 0.25),
+      0 1px 0 rgba(255, 255, 255, 0.6);
   }
-  @keyframes platter-spin { to { transform: rotate(360deg); } }
-  .deck-card::after {
-    content: "";
+  .tt-led {
     position: absolute;
-    left: 1.5rem;
-    bottom: 14px;
-    width: 6px;
-    height: 6px;
+    top: 9px;
+    left: 10px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     background: var(--accent);
+    box-shadow: 0 0 6px 1px rgba(51, 102, 58, 0.5);
     animation: led 2.4s ease-in-out infinite;
   }
-  .deck-card { position: relative; }
+  .tt-speed {
+    position: absolute;
+    bottom: 7px;
+    left: 9px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
   @keyframes led { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
   .sleeve {
     position: absolute;
@@ -280,14 +289,14 @@
       radial-gradient(circle at 50% 50%, transparent 32px, var(--rule) 33px, transparent 34.5px);
     border: 1px solid var(--rule);
     border-radius: 8px;
-    transform: rotate(7deg) translateY(-8px);
+    transform: rotate(11deg) translate(52px, -70px) scale(0.9);
     z-index: 42;
     pointer-events: none;
     box-shadow: 0 5px 12px rgba(20, 30, 20, 0.10);
     opacity: 0;
-    transition: opacity 320ms ease, transform 320ms ease;
+    transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1), opacity 340ms ease;
   }
-  .deck.swapping .sleeve { opacity: 1; transform: rotate(7deg) translateY(0); }
+  .deck.swapping .sleeve { opacity: 1; transform: rotate(7deg) translate(0, 0) scale(1); }
   .deck-card {
     border: 1px solid var(--rule);
     border-radius: 14px;
@@ -434,7 +443,7 @@
     .vinyl { width: 108px; height: 108px; right: 10px; }
     .track { font-size: 1.15rem; }
   }
-  @media (prefers-reduced-motion: reduce) { .disc { animation: none; } .shelf.in .case { animation: none; } .tt::before { animation: none; } .deck-card::after { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .disc { animation: none; } .shelf.in .case { animation: none; } .tt-led { animation: none; } }
 
   /* ---------- footer ---------- */
   footer {
@@ -533,7 +542,7 @@
 <!-- JAM:END -->
         </div>
       </div>
-      <div class="tt" aria-hidden="true"></div>
+      <div class="tt" aria-hidden="true"><span class="tt-led"></span><span class="tt-speed">33⅓</span></div>
       <div class="sleeve" aria-hidden="true"></div>
       <a class="vinyl" href="https://www.last.fm/music/Gustav+Mahler/_/Symphony+No.+2+%22Resurrection%22:+V.+Finale:+g.+Sehr+langsam+und+gedehnt+-+Live" target="_blank" rel="noopener" aria-label="Open this track on Last.fm">
         <div class="disc">
