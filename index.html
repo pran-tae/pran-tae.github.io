@@ -266,9 +266,10 @@
     height: 148px;
     z-index: 39;
     pointer-events: none;
-    animation: shuffle-out 1250ms cubic-bezier(0.45, 0, 0.3, 1) forwards;
+    animation: shuffle-out 1150ms cubic-bezier(0.45, 0, 0.3, 1) forwards;
   }
-  .vinyl.load { z-index: 41; animation: shuffle-in 1350ms cubic-bezier(0.22, 1, 0.36, 1); }
+  .vinyl.waiting { opacity: 0; }
+  .vinyl.load { z-index: 41; animation: shuffle-in 1250ms cubic-bezier(0.22, 1, 0.36, 1); }
   @keyframes shuffle-out {
     0% { transform: translateY(-50%); opacity: 1; }
     35% { transform: translateY(-62%) translateX(-8%) rotate(-6deg); opacity: 1; }
@@ -280,11 +281,11 @@
     75% { transform: translateY(-47%) translateX(-2%) rotate(-2deg); }
     100% { transform: translateY(-50%); }
   }
-  .deck-info.swap { animation: info-swap 1400ms ease; }
+  .deck-info.swap { animation: info-swap 1800ms ease; }
   @keyframes info-swap {
     0% { opacity: 1; }
-    28% { opacity: 0; transform: translateY(4px); }
-    58% { opacity: 0; transform: translateY(-3px); }
+    30% { opacity: 0; transform: translateY(4px); }
+    60% { opacity: 0; transform: translateY(-3px); }
     100% { opacity: 1; transform: none; }
   }
   @media (max-width: 560px) { .vinyl-ghost { width: 128px; height: 128px; right: 12px; } }
@@ -677,9 +678,7 @@
         const sig = name + "|" + artist;
         if (sig === current) return;
         current = sig;
-        const apply = () => {
-          trackEl.textContent = name;
-          artistEl.textContent = artist;
+        const applyMedia = () => {
           if (t.url) vinyl.href = t.url;
           const imgs = (t.image || []).map((i) => i["#text"]).filter(Boolean);
           if (imgs.length) {
@@ -687,20 +686,29 @@
             label.style.backgroundImage = "url('" + imgs[imgs.length - 1] + "')";
           }
         };
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { apply(); return; }
+        const applyText = () => {
+          trackEl.textContent = name;
+          artistEl.textContent = artist;
+        };
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { applyMedia(); applyText(); return; }
         const info = document.querySelector(".deck-info");
         const ghost = document.createElement("div");
         ghost.className = "vinyl-ghost";
         ghost.appendChild(vinyl.querySelector(".disc").cloneNode(true));
         deck.appendChild(ghost);
-        apply();                                  // new record enters already wearing its album
+        vinyl.classList.add("waiting");           // hide the real deck while the ghost carries the old record out
+        applyMedia();
         info.classList.add("swap");
-        vinyl.classList.add("load");
+        setTimeout(applyText, 640);               // title changes while hidden mid-fade
+        setTimeout(() => {
+          vinyl.classList.remove("waiting");
+          vinyl.classList.add("load");            // then the new record comes in
+        }, 1060);
         setTimeout(() => {
           ghost.remove();
           vinyl.classList.remove("load");
           info.classList.remove("swap");
-        }, 1450);
+        }, 2400);
       } catch (e) { /* keep the baked deck */ }
     }
 
