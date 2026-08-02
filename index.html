@@ -935,6 +935,8 @@
     lastFocus = [0, false];
     snapRefan();
     recenter();
+    setTimeout(remeasure, 350);    // settle passes: invisible, the shelf is below the fold
+    setTimeout(remeasure, 1200);
     if (touch) {
       caseEls.forEach((c, i) => {
         c.addEventListener("click", (e) => {
