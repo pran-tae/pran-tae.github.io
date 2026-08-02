@@ -1,0 +1,30 @@
+name: Refresh feeds
+
+on:
+  schedule:
+    - cron: "17 6 * * *"   # daily, 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refresh flicks and jams
+        env:
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+        run: python3 scripts/refresh_feeds.py
+      - name: Commit if changed
+        run: |
+          git config user.name "feed-refresh"
+          git config user.email "actions@users.noreply.github.com"
+          if ! git diff --quiet; then
+            git add -A
+            git commit -m "Refresh flicks and jams"
+            git push
+          else
+            echo "No changes."
+          fi
