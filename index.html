@@ -740,6 +740,10 @@
     const oldW = el.offsetWidth;
     ncNew.textContent = names[i];
     const newW = ncNew.offsetWidth;
+    bubble.classList.remove("show");                 // the old name is on its way out
+    if (names[i] === "Term") {
+      setTimeout(() => bubble.classList.add("show"), 620);   // greet as the slam settles
+    }
     const bang = document.querySelector(".bang");
     const growing = newW >= oldW;
     if (bang) bang.classList.add(growing ? "grow" : "shrink");
@@ -757,7 +761,6 @@
       el.classList.remove("dropping");
       el.style.width = "";
       el.style.transition = "";
-      bubble.classList.toggle("show", names[i] === "Term");
       const bang = document.querySelector(".bang");
       if (bang) bang.classList.remove("grow", "shrink");
       dropping = false;
