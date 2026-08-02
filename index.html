@@ -129,7 +129,7 @@
   .ledger .dots {
     flex: 1;
     align-self: flex-end;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     border-bottom: 1px dotted var(--leader);
     min-width: 2.5rem;
   }
@@ -168,7 +168,9 @@
     border-radius: 3px;
     z-index: var(--z);
   }
+  .shelf.js .case { opacity: 0; }
   .shelf.in .case {
+    opacity: 1;
     animation: case-in 480ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
     animation-delay: calc(var(--n) * 70ms);
   }
@@ -495,6 +497,7 @@
 
   const shelf = document.querySelector(".shelf");
   if (shelf && "IntersectionObserver" in window) {
+    shelf.classList.add("js");
     const io = new IntersectionObserver((entries) => {
       if (entries.some((e) => e.isIntersecting)) { shelf.classList.add("in"); io.disconnect(); }
     }, { threshold: 0.25 });
