@@ -148,18 +148,18 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    perspective: 1100px;
-    perspective-origin: 35% 55%;
+    perspective: 900px;
+    perspective-origin: 30% 72%;
     padding-top: 3.4rem;
     min-width: min-content;
   }
   .case {
     flex: none;
     position: relative;
-    margin-right: -50px;
-    transform: rotateY(-35deg);
+    margin-right: -82px;
+    transform: rotateY(-14deg);
     transform-origin: 50% 85%;
-    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
     border-radius: 3px;
     z-index: var(--z);
   }
@@ -173,20 +173,11 @@
     from { opacity: 0; transform: rotateY(-55deg) translateY(16px); }
     to { opacity: 1; }
   }
-  .case:nth-child(1) { --h: 192px; }
-  .case:nth-child(2) { --h: 172px; }
-  .case:nth-child(3) { --h: 160px; }
-  .case:nth-child(4) { --h: 150px; }
-  .case:nth-child(5) { --h: 142px; }
-  .case:nth-child(6) { --h: 135px; }
-  .case:nth-child(7) { --h: 129px; }
-  .case:nth-child(8) { --h: 124px; }
-  .case:first-child { transform: rotateY(-18deg); }
   .case:last-child { margin-right: 0; }
   .case img {
     display: block;
     width: auto;
-    height: var(--h);
+    height: 192px;
     border-radius: 3px;
     box-shadow: 6px 8px 18px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.18);
     transition: box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -328,8 +319,8 @@
   @media (max-width: 560px) {
     .deck-card { padding-right: 9.5rem; min-height: 160px; }
     .vinyl { width: 128px; height: 128px; right: 12px; }
-    .case { margin-right: -38px; }
-    .case img { height: calc(var(--h) * 0.82); }
+    .case { margin-right: -64px; }
+    .case img { height: 150px; }
     .shelf-wrap { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
     .shelf-wrap::-webkit-scrollbar { display: none; }
     .shelf { padding-top: 3rem; }
@@ -485,43 +476,42 @@
     const shelfEl = document.querySelector(".shelf");
     const caseEls = Array.from(shelfEl.querySelectorAll(".case"));
     const touch = window.matchMedia("(hover: none)").matches;
-    let hot = null;
+    let hotIndex = null;
 
-    function refan(h) {
-      hot = h;
+    const STEP = 120;
+    function refan(h, hot) {
+      hot = hot === undefined ? true : hot;
       caseEls.forEach((c, i) => {
-        c.classList.toggle("is-hot", i === h);
-        if (h === null) {
-          c.style.transform = "";
-          c.style.zIndex = "";
-          return;
-        }
         const d = Math.abs(i - h);
-        const sc = Math.max(0.8, 1.16 - 0.09 * d);
-        if (i === h) c.style.transform = "rotateY(-4deg) translateY(-12px) scale(1.16)";
-        else if (i < h) c.style.transform = "rotateY(30deg) scale(" + sc + ")";
-        else c.style.transform = "rotateY(-35deg) scale(" + sc + ")";
+        c.classList.toggle("is-hot", hot && i === h);
+        let t = "translateZ(" + (-STEP * d) + "px)";
+        if (i < h) t += " rotateY(10deg)";
+        else if (i > h) t += " rotateY(-14deg)";
+        else t += hot ? " translateY(-26px) rotateY(-3deg) scale(1.06)" : " rotateY(-14deg)";
+        c.style.transform = t;
         c.style.zIndex = String(30 - d);
       });
+      hotIndex = hot ? h : null;
     }
 
+    refan(0, false);
     if (touch) {
       caseEls.forEach((c, i) => {
         c.addEventListener("click", (e) => {
-          if (hot !== i) { e.preventDefault(); refan(i); }
+          if (hotIndex !== i) { e.preventDefault(); refan(i); }
         });
       });
       document.addEventListener("click", (e) => {
-        if (!e.target.closest(".case")) refan(null);
+        if (!e.target.closest(".case")) refan(0, false);
       });
     } else {
       caseEls.forEach((c, i) => c.addEventListener("pointerenter", () => refan(i)));
-      shelfEl.addEventListener("pointerleave", () => refan(null));
+      shelfEl.addEventListener("pointerleave", () => refan(0, false));
       caseEls.forEach((c, i) => {
         c.addEventListener("focus", () => refan(i));
       });
       shelfEl.addEventListener("focusout", (e) => {
-        if (!shelfEl.contains(e.relatedTarget)) refan(null);
+        if (!shelfEl.contains(e.relatedTarget)) refan(0, false);
       });
     }
   })();
