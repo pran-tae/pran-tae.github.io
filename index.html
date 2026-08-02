@@ -104,18 +104,20 @@
   .name-cycle.dropping .nc-old { animation: nc-crush 720ms ease-in-out forwards; }
   @keyframes nc-drop {
     0% { transform: translateY(-1.5em) scaleY(1); opacity: 0; }
-    13% { opacity: 1; }
-    25% { transform: translateY(-0.74em) scaleY(1); }
-    52% { transform: translateY(-0.05em) scaleY(0.8); }
-    64% { transform: translateY(-0.42em) scaleY(1.05); }
-    78% { transform: translateY(0) scaleY(0.9); }
-    90% { transform: translateY(-0.04em) scaleY(1.04); }
+    12% { opacity: 1; }
+    25% { transform: translateY(-0.62em) scaleY(1); }
+    38% { transform: translateY(-0.5em) scaleY(0.92); }
+    52% { transform: translateY(-0.95em) scaleY(1.06); }
+    66% { transform: translateY(-0.02em) scaleY(0.8); }
+    82% { transform: translateY(0) scaleY(1.06); }
     100% { transform: translateY(0) scaleY(1); opacity: 1; }
   }
   @keyframes nc-crush {
     0%, 25% { transform: scaleY(1); opacity: 1; }
-    52% { transform: scaleY(0.07); opacity: 1; }
-    60% { transform: scaleY(0.05); opacity: 0; }
+    38% { transform: scaleY(0.5); opacity: 1; }
+    52% { transform: scaleY(0.55); opacity: 1; }
+    66% { transform: scaleY(0.06); opacity: 1; }
+    74% { transform: scaleY(0.05); opacity: 0; }
     100% { transform: scaleY(0.05); opacity: 0; }
   }
   .name-wrap { position: relative; display: inline-block; }
@@ -429,14 +431,32 @@
   .vinyl.falloff { animation: vinyl-falloff 1500ms linear forwards; }
   .vinyl.reland { animation: vinyl-reland 680ms cubic-bezier(0.22, 1, 0.36, 1); }
   @keyframes vinyl-falloff {
-    0% { transform: translate(0, -50%); opacity: 1; }
-    22% { transform: translate(150px, -110%); }
-    40% { transform: translate(280px, -40%); }
-    54% { transform: translate(380px, 170px); }
-    58% { transform: translate(410px, 185px); }
-    76% { transform: translate(540px, -20%); }
-    88% { transform: translate(650px, 60px); opacity: 1; }
-    100% { transform: translate(780px, 220px); opacity: 0; }
+    0% { transform: translate(0.0px, calc(-50% + 0.0px)); opacity: 1; }
+    4% { transform: translate(31.2px, calc(-50% + -29.6px)); }
+    8% { transform: translate(62.4px, calc(-50% + -52.4px)); }
+    12% { transform: translate(93.6px, calc(-50% + -68.3px)); }
+    16% { transform: translate(124.8px, calc(-50% + -77.4px)); }
+    20% { transform: translate(156.0px, calc(-50% + -79.7px)); }
+    24% { transform: translate(187.2px, calc(-50% + -75.1px)); }
+    28% { transform: translate(218.4px, calc(-50% + -63.6px)); }
+    32% { transform: translate(249.6px, calc(-50% + -45.4px)); }
+    36% { transform: translate(280.8px, calc(-50% + -20.2px)); }
+    40% { transform: translate(312.0px, calc(-50% + 11.7px)); }
+    44% { transform: translate(343.2px, calc(-50% + 50.5px)); }
+    48% { transform: translate(374.4px, calc(-50% + 96.1px)); }
+    52% { transform: translate(405.6px, calc(-50% + 148.6px)); }
+    56% { transform: translate(436.8px, calc(-50% + 176.6px)); }
+    60% { transform: translate(468.0px, calc(-50% + 155.9px)); }
+    64% { transform: translate(499.2px, calc(-50% + 142.1px)); }
+    68% { transform: translate(530.4px, calc(-50% + 135.1px)); }
+    72% { transform: translate(561.6px, calc(-50% + 134.9px)); }
+    76% { transform: translate(592.8px, calc(-50% + 141.6px)); }
+    80% { transform: translate(624.0px, calc(-50% + 155.1px)); }
+    84% { transform: translate(655.2px, calc(-50% + 175.5px)); }
+    88% { transform: translate(686.4px, calc(-50% + 202.7px)); opacity: 1; }
+    92% { transform: translate(717.6px, calc(-50% + 236.7px)); }
+    96% { transform: translate(748.8px, calc(-50% + 277.6px)); }
+    100% { transform: translate(780.0px, calc(-50% + 325.4px)); opacity: 0; }
   }
   @keyframes vinyl-reland {
     0% { transform: translateY(-200%) rotate(-8deg); opacity: 0; }
@@ -721,11 +741,16 @@
     ncNew.textContent = names[i];
     const newW = ncNew.offsetWidth;
     const bang = document.querySelector(".bang");
-    if (bang) bang.classList.add(newW >= oldW ? "grow" : "shrink");
+    const growing = newW >= oldW;
+    if (bang) bang.classList.add(growing ? "grow" : "shrink");
     el.style.width = oldW + "px";
     void el.offsetWidth;
     el.style.transition = "width 260ms cubic-bezier(0.22, 1, 0.36, 1)";
-    el.style.width = newW + "px";
+    if (growing) {
+      el.style.width = newW + "px";
+    } else {
+      setTimeout(() => { el.style.width = newW + "px"; }, 460);  // shrink only once the wide name is crushed
+    }
     el.classList.add("dropping");
     setTimeout(() => {
       ncOld.textContent = names[i];
