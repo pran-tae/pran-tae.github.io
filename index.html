@@ -685,6 +685,7 @@
     const LENS = 1600;
     const ORIGIN_X = 0.45;
     let centers = [];
+    let halfW = 64;
     let lastFocus = [0, false];
 
     function measure() {
@@ -696,6 +697,7 @@
       const sw = shelfEl.clientWidth;
       const start = Math.max(0, (sw - total) / 2);
       const ox = sw * ORIGIN_X;
+      halfW = w / 2;
       centers = caseEls.map((c, i) => start + stride * i + w / 2 - ox);
     }
 
@@ -722,7 +724,7 @@
         c.classList.toggle("is-hot", hot && i === h);
         const z = STEP * d;
         const mobile = window.matchMedia("(max-width: 560px)").matches;
-        let tx = (centers[i] * z) / LENS;  // cancel projection drift: the wave stays put
+        let tx = ((centers[i] - halfW) * z) / LENS;  // pin each case's LEFT EDGE: slivers never creep
         if (hot && i !== h) {
           // neighbors yield locally, like the reference: pushed out from the expansion
           const away = i < h ? -1 : 1;
