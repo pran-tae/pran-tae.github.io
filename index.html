@@ -621,7 +621,7 @@
   </section>
 
   <section>
-    <h2 class="label"><span class="mark">✳</span> Recent jams</h2>
+    <h2 class="label"><span class="mark">✳</span> Currently jamming</h2>
     <div class="deck" id="deck">
       <div class="deck-card">
         <div class="deck-info">
@@ -935,12 +935,8 @@
         const sig = name + "|" + artist;
         if (sig === current) { synced = true; return; }
         current = sig;
-        if (!synced) {
-          synced = true;        // first sync after load: no ceremony
-          applyMediaSilent();
-          return;
-        }
-        const applyMediaSilent = () => { applyMedia(); applyText(); };
+        const firstSync = !synced;
+        synced = true;
         const applyMedia = () => {
             const imgs = (t.image || []).map((i) => i["#text"]).filter(Boolean);
           if (imgs.length) {
@@ -952,6 +948,7 @@
           trackEl.textContent = name;
           artistEl.textContent = artist;
         };
+        if (firstSync) { applyMedia(); applyText(); return; }   // first sync after load: no ceremony
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { applyMedia(); applyText(); return; }
         const info = document.querySelector(".deck-info");
         const sleeveEl = deck.querySelector(".sleeve");
