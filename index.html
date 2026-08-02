@@ -518,9 +518,15 @@
     let lastFocus = [0, false];
 
     function measure() {
-      // .shelf has perspective, so it is the cases' offsetParent: offsetLeft is already shelf-relative
-      const ox = shelfEl.offsetWidth * ORIGIN_X;
-      centers = caseEls.map((c) => c.offsetLeft + c.offsetWidth / 2 - ox);
+      // pure layout math: no offsetParent semantics, no transform interference
+      const w = caseEls[0].offsetWidth;
+      const mr = parseFloat(getComputedStyle(caseEls[0]).marginRight) || 0;
+      const stride = w + mr;
+      const total = w + stride * (caseEls.length - 1);
+      const sw = shelfEl.clientWidth;
+      const start = Math.max(0, (sw - total) / 2);
+      const ox = sw * ORIGIN_X;
+      centers = caseEls.map((c, i) => start + stride * i + w / 2 - ox);
     }
 
     function refan(h, hot) {
