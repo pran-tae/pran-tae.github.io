@@ -918,6 +918,7 @@
     const artistEl = document.querySelector(".artist");
     const label = document.querySelector(".disc-label");
     let current = trackEl.textContent.trim() + "|" + artistEl.textContent.trim();
+    let synced = false;
     let timer = 0;
 
     async function poll() {
@@ -932,8 +933,14 @@
         const artist = t.artist["#text"];
         if (!name || !artist) return;
         const sig = name + "|" + artist;
-        if (sig === current) return;
+        if (sig === current) { synced = true; return; }
         current = sig;
+        if (!synced) {
+          synced = true;        // first sync after load: no ceremony
+          applyMediaSilent();
+          return;
+        }
+        const applyMediaSilent = () => { applyMedia(); applyText(); };
         const applyMedia = () => {
             const imgs = (t.image || []).map((i) => i["#text"]).filter(Boolean);
           if (imgs.length) {
