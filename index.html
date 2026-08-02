@@ -783,9 +783,11 @@
         const sleeveEl = deck.querySelector(".sleeve");
         const vr = vinyl.getBoundingClientRect();
         const sr = sleeveEl.getBoundingClientRect();
-        deck.style.setProperty("--sx", (sr.left + sr.width / 2 - (vr.left + vr.width / 2)).toFixed(1) + "px");
-        deck.style.setProperty("--sy", (sr.top + sr.height / 2 - (vr.top + vr.height / 2) + 8).toFixed(1) + "px");
-        deck.style.setProperty("--ss", (sr.width / vr.width * 0.82).toFixed(2));
+        const sw = parseFloat(getComputedStyle(sleeveEl).width);
+        // hidden pose is translate(52px, -70px); shown center = measured center - that offset
+        deck.style.setProperty("--sx", (sr.left + sr.width / 2 - 52 - (vr.left + vr.width / 2)).toFixed(1) + "px");
+        deck.style.setProperty("--sy", (sr.top + sr.height / 2 + 70 - (vr.top + vr.height / 2)).toFixed(1) + "px");
+        deck.style.setProperty("--ss", (sw / vr.width * 0.82).toFixed(2));
         deck.classList.add("swapping");
         const ghost = document.createElement("div");
         ghost.className = "vinyl-ghost";
