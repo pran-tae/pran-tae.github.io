@@ -53,10 +53,10 @@
 
   /* ---------- intro ---------- */
   h1 {
-    font-size: 1.0625rem;
+    font-size: 1.5rem;
     font-weight: normal;
     margin: 0;
-    line-height: 1.65;
+    line-height: 1.4;
   }
   .name-cycle {
     font: inherit;
@@ -81,18 +81,21 @@
     white-space: nowrap;
     pointer-events: none;
   }
-  .name-cycle.dropping .nc-new { animation: nc-drop 520ms cubic-bezier(0.4, 0.02, 0.62, 1) forwards; }
-  .name-cycle.dropping .nc-old { animation: nc-crush 130ms ease-in 300ms forwards; }
+  .name-cycle.dropping .nc-new { animation: nc-drop 560ms ease-in-out forwards; }
+  .name-cycle.dropping .nc-old { animation: nc-crush 560ms ease-in-out forwards; }
   @keyframes nc-drop {
-    0% { transform: translateY(-1.3em) scaleY(1); opacity: 0; }
-    20% { opacity: 1; }
-    62% { transform: translateY(0.1em) scaleY(0.78); opacity: 1; }
-    80% { transform: translateY(-0.08em) scaleY(1.08); opacity: 1; }
+    0% { transform: translateY(-1.5em) scaleY(1); opacity: 0; }
+    16% { opacity: 1; }
+    32% { transform: translateY(-0.74em) scaleY(1); }
+    68% { transform: translateY(-0.06em) scaleY(0.86); }
+    84% { transform: translateY(-0.09em) scaleY(1.07); }
     100% { transform: translateY(0) scaleY(1); opacity: 1; }
   }
   @keyframes nc-crush {
-    0% { transform: scaleY(1); opacity: 1; }
-    100% { transform: scaleY(0.04); opacity: 0; }
+    0%, 32% { transform: scaleY(1); opacity: 1; }
+    68% { transform: scaleY(0.07); opacity: 1; }
+    76% { transform: scaleY(0.05); opacity: 0; }
+    100% { transform: scaleY(0.05); opacity: 0; }
   }
   .name-wrap { position: relative; display: inline-block; }
   .bubble {
@@ -181,7 +184,7 @@
   .case {
     flex: none;
     position: relative;
-    margin-right: -78px;
+    margin-right: -81px;
     transform: rotateY(-14deg);
     transform-origin: 50% 85%;
     transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), filter 420ms ease;
@@ -507,7 +510,7 @@
     .track { font-size: 1rem; }
     .artist { font-size: 0.875rem; }
     .vinyl { width: 128px; height: 128px; right: 12px; }
-    .case { margin-right: calc((100vw - 3rem - 92px) / 7 - 92px); }
+    .case { margin-right: calc((100vw - 3rem - 92px) / 7 - 92px - 3px); }
     .case img { height: 138px; }
     .shelf-wrap { overflow-x: clip; overflow-y: visible; }
     .shelf-wrap::-webkit-scrollbar { display: none; }
@@ -661,7 +664,7 @@
       el.classList.remove("dropping");
       bubble.classList.toggle("show", names[i] === "Term");
       dropping = false;
-    }, 530);
+    }, 575);
   });
 
   const shelf = document.querySelector(".shelf");
