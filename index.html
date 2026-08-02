@@ -906,7 +906,7 @@
         shelfEl.style.transform = "translateX(" + dx.toFixed(1) + "px)";
       });
     }
-    function remeasure() { measure(); refan(lastFocus[0], lastFocus[1]); recenter(); }
+    function remeasure() { measure(); refan(lastFocus[0], lastFocus[1]); recenter(); setTimeout(recenter, 520); }
     measure();
     window.addEventListener("resize", remeasure);
     window.addEventListener("load", remeasure);
@@ -917,6 +917,7 @@
 
     refan(0, false);
     recenter();
+    setTimeout(recenter, 520);
     if (touch) {
       caseEls.forEach((c, i) => {
         c.addEventListener("click", (e) => {
