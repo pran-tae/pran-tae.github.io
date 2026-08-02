@@ -46,36 +46,43 @@ def replace_block(text, start_marker, end_marker, new_inner):
 
 
 def refresh_flicks(index):
-    rss = fetch(f"https://letterboxd.com/{LETTERBOXD_USER}/rss/")
-    items = re.findall(r"<item>(.*?)</item>", rss, re.S)
+    """Films from the profile's /films/ page (sorted by date added, i.e. rating
+    activity), not the diary RSS: rating without a diary entry still counts."""
+    page = fetch(f"https://letterboxd.com/{LETTERBOXD_USER}/films/")
+    items = re.findall(r'<li class="griditem">(.*?)</li>', page, re.S)
     films = []
     for it in items:
-        title = re.search(r"<letterboxd:filmTitle>(.*?)</letterboxd:filmTitle>", it)
-        rating = re.search(r"<letterboxd:memberRating>(.*?)</letterboxd:memberRating>", it)
-        link = re.search(r"<link>(.*?)</link>", it)
-        poster = re.search(r'src="(https://a\.ltrbxd\.com/resized/[^"]+\.jpg[^"]*)"', it)
-        if title and link and poster:
-            films.append({
-                "title": html.unescape(title.group(1)),
-                "stars": stars(rating.group(1)) if rating else "",
-                "link": link.group(1),
-                "poster": poster.group(1),
-            })
+        slug = re.search(r'data-item-slug="([^"]+)"', it)
+        name = re.search(r'data-item-name="([^"]+)"', it)
+        if not (slug and name):
+            continue
+        rating = re.search(r"rated-(\d+)", it)
+        title = re.sub(r"\s*\(\d{4}\)$", "", html.unescape(name.group(1)))
+        films.append({
+            "slug": slug.group(1),
+            "title": title,
+            "stars": stars(int(rating.group(1)) / 2) if rating else "",
+        })
         if len(films) == SHELF_SIZE:
             break
     if not films:
-        raise RuntimeError("no films parsed from RSS")
+        raise RuntimeError("no films parsed from the films page")
 
     lines = []
     for n, f in enumerate(films):
+        film_page = fetch(f"https://letterboxd.com/film/{f['slug']}/")
+        m = re.search(r'"image":"(https://a\.ltrbxd\.com/resized/film-poster/[^"]+)"', film_page)
+        if not m:
+            raise RuntimeError(f"no poster for {f['slug']}")
+        data = fetch(m.group(1), binary=True)
         path = f"assets/posters/p{n + 1}.jpg"
-        data = fetch(f["poster"], binary=True)
         with open(os.path.join(ROOT, path), "wb") as fh:
             fh.write(data)
         path += "?v=" + hashlib.md5(data).hexdigest()[:8]
         t = html.escape(f["title"], quote=True)
+        link = f"https://letterboxd.com/{LETTERBOXD_USER}/film/{f['slug']}/"
         lines.append(
-            f'        <a class="case" style="--n:{n};--z:{SHELF_SIZE - n}" href="{f["link"]}" '
+            f'        <a class="case" style="--n:{n};--z:{SHELF_SIZE - n}" href="{link}" '
             f'data-title="{t}" data-stars="{f["stars"]}" target="_blank" rel="noopener">'
             f'<img src="{path}" alt="{t} poster"></a>'
         )
