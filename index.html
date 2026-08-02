@@ -148,15 +148,15 @@
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    perspective: 900px;
-    perspective-origin: 30% 72%;
+    perspective: 1600px;
+    perspective-origin: 45% 70%;
     padding-top: 3.4rem;
     min-width: min-content;
   }
   .case {
     flex: none;
     position: relative;
-    margin-right: -82px;
+    margin-right: -78px;
     transform: rotateY(-14deg);
     transform-origin: 50% 85%;
     transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -341,7 +341,7 @@
   @media (max-width: 560px) {
     .deck-card { padding-right: 9.5rem; min-height: 160px; }
     .vinyl { width: 128px; height: 128px; right: 12px; }
-    .case { margin-right: -64px; }
+    .case { margin-right: -58px; }
     .case img { height: 150px; }
     .shelf-wrap { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
     .shelf-wrap::-webkit-scrollbar { display: none; }
@@ -500,7 +500,7 @@
     const touch = window.matchMedia("(hover: none)").matches;
     let hotIndex = null;
 
-    const STEP = 120;
+    const STEP = 150;
     function refan(h, hot) {
       hot = hot === undefined ? true : hot;
       caseEls.forEach((c, i) => {
