@@ -782,7 +782,11 @@
   if (shelf && "IntersectionObserver" in window) {
     shelf.classList.add("js");
     const io = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting)) { shelf.classList.add("in"); io.disconnect(); }
+      if (entries.some((e) => e.isIntersecting)) {
+        if (window.__shelfGate && !window.__shelfGate()) window.__shelfWant = true;
+        else shelf.classList.add("in");
+        io.disconnect();
+      }
     }, { threshold: 0.25 });
     io.observe(shelf);
   } else if (shelf) {
@@ -932,10 +936,21 @@
     measure();
     window.addEventListener("resize", remeasure);
     window.addEventListener("load", remeasure);
+    let pendingImgs = 0;
+    function imgDone() {
+      remeasure();
+      pendingImgs--;
+      if (pendingImgs === 0 && window.__shelfWant) shelfEl.classList.add("in");
+    }
     caseEls.forEach((c) => {
       const im = c.querySelector("img");
-      if (im && !im.complete) im.addEventListener("load", remeasure);
+      if (im && !im.complete) {
+        pendingImgs++;
+        im.addEventListener("load", imgDone);
+        im.addEventListener("error", imgDone);
+      }
     });
+    window.__shelfGate = () => pendingImgs === 0;
 
     lastFocus = [0, false];
     snapRefan();
