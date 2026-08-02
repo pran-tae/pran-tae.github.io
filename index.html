@@ -258,11 +258,12 @@
   }
   .arm {
     position: absolute;
-    top: 2px;
-    right: 4px;
+    top: 50%;
+    right: 6px;
+    margin-top: -86px;
     width: 20px;
     height: 20px;
-    z-index: 3;
+    z-index: 5;
     pointer-events: none;
   }
   .arm::before {
@@ -413,12 +414,12 @@
   @media (max-width: 560px) {
     .vinyl-ghost { width: 128px; height: 128px; right: 12px; }
     .sleeve { width: 100px; height: 100px; top: -44px; }
-    .tt { width: 150px; height: 150px; right: 1px; } .sleeve { width: 112px; height: 112px; } .arm-rod { height: 47px; }
+    .tt { width: 150px; height: 150px; right: 1px; } .sleeve { width: 112px; height: 112px; } .arm-rod { height: 47px; } .arm { margin-top: -73px; right: 5px; }
   }
   @media (max-width: 400px) {
     .vinyl-ghost { width: 108px; height: 108px; right: 10px; }
     .sleeve { width: 88px; height: 88px; top: -38px; }
-    .tt { width: 128px; height: 128px; right: 0; } .sleeve { width: 96px; height: 96px; } .arm-rod { height: 39px; }
+    .tt { width: 128px; height: 128px; right: 0; } .sleeve { width: 96px; height: 96px; } .arm-rod { height: 39px; } .arm { margin-top: -62px; right: 4px; }
   }
   .disc {
     position: relative;
@@ -592,7 +593,8 @@
 <!-- JAM:END -->
         </div>
       </div>
-      <div class="tt" aria-hidden="true"><span class="tt-led"></span><span class="tt-speed">33⅓</span><span class="arm"><span class="arm-rod"></span></span></div>
+      <div class="tt" aria-hidden="true"><span class="tt-led"></span><span class="tt-speed">33⅓</span></div>
+      <span class="arm" aria-hidden="true"><span class="arm-rod"></span></span>
       <div class="sleeve" aria-hidden="true"></div>
       <a class="vinyl" href="https://www.last.fm/music/Gustav+Mahler/_/Symphony+No.+2+%22Resurrection%22:+V.+Finale:+g.+Sehr+langsam+und+gedehnt+-+Live" target="_blank" rel="noopener" aria-label="Open this track on Last.fm">
         <div class="disc">
