@@ -567,6 +567,17 @@
     -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 4.5px, #000 5px);
     mask: radial-gradient(circle at 50% 50%, transparent 0 4.5px, #000 5px);
   }
+  .disc::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: center / 100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23E8E6DC' stroke-width='1.1' stroke-linecap='round' opacity='0.9'%3E%3Cpath d='M50 98 L48 84 L53 71 L47 58 L51 45 L48 36'/%3E%3Cpath d='M50 98 L59 87 L57 75 L66 64 L64 55'/%3E%3Cpath d='M50 98 L41 89 L37 77 L29 71'/%3E%3Cpath d='M53 71 L61 68'/%3E%3Cpath d='M47 58 L39 54'/%3E%3Cpath d='M50 98 L54 92 L63 89'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0;
+    transition: opacity 70ms ease;
+    pointer-events: none;
+  }
+  .disc.cracked::after { opacity: 1; }
   .spindle {
     position: absolute;
     top: 50%;
@@ -977,8 +988,10 @@
       vinyl.style.top = (fr.top + fr.height / 2) + "px";
       vinyl.style.right = "auto";
       vinyl.classList.add("falloff");
+      setTimeout(() => discEl2.classList.add("cracked"), 820);   // the floor is unkind
       setTimeout(() => {
         energy = 0;
+        discEl2.classList.remove("cracked");                     // the sleeve had a spare
         vinyl.style.position = "";
         vinyl.style.left = "";
         vinyl.style.top = "";
