@@ -228,6 +228,33 @@
     position: relative;
     margin-top: 2.6rem;
   }
+  .turntable {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    width: 168px;
+    height: 168px;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    background-color: var(--ground);
+    background-image: radial-gradient(circle at 50% 50%, #1E2F22 0 77px, transparent 77.5px);
+    z-index: 1;
+    pointer-events: none;
+    box-shadow: 0 3px 10px rgba(20, 30, 20, 0.07);
+  }
+  .turntable::after {
+    content: "";
+    position: absolute;
+    right: 9px;
+    bottom: 9px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: led 2.4s ease-in-out infinite;
+  }
+  @keyframes led { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
   .sleeve {
     position: absolute;
     top: -52px;
@@ -310,10 +337,12 @@
   @media (max-width: 560px) {
     .vinyl-ghost { width: 128px; height: 128px; right: 12px; }
     .sleeve { width: 100px; height: 100px; top: -44px; }
+    .turntable { width: 146px; height: 146px; right: 3px; background-image: radial-gradient(circle at 50% 50%, #1E2F22 0 67px, transparent 67.5px); }
   }
   @media (max-width: 400px) {
     .vinyl-ghost { width: 108px; height: 108px; right: 10px; }
     .sleeve { width: 88px; height: 88px; top: -38px; }
+    .turntable { width: 124px; height: 124px; right: 2px; background-image: radial-gradient(circle at 50% 50%, #1E2F22 0 57px, transparent 57.5px); }
   }
   .disc {
     position: relative;
@@ -388,7 +417,7 @@
     .vinyl { width: 108px; height: 108px; right: 10px; }
     .track { font-size: 1.15rem; }
   }
-  @media (prefers-reduced-motion: reduce) { .disc { animation: none; } .shelf.in .case { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .disc { animation: none; } .shelf.in .case { animation: none; } .turntable::after { animation: none; } }
 
   /* ---------- footer ---------- */
   footer {
@@ -487,6 +516,7 @@
 <!-- JAM:END -->
         </div>
       </div>
+      <div class="turntable" aria-hidden="true"></div>
       <div class="sleeve" aria-hidden="true"></div>
       <a class="vinyl" href="https://www.last.fm/music/Gustav+Mahler/_/Symphony+No.+2+%22Resurrection%22:+V.+Finale:+g.+Sehr+langsam+und+gedehnt+-+Live" target="_blank" rel="noopener" aria-label="Open this track on Last.fm">
         <div class="disc">
