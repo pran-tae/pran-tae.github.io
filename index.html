@@ -561,27 +561,31 @@
     size();
     window.addEventListener("resize", size);
 
-    vinyl.addEventListener("pointerleave", () => { last = null; });
+    let cursor = null;
+    vinyl.addEventListener("pointerleave", () => { cursor = null; last = null; });
     vinyl.addEventListener("pointermove", (e) => {
       const rc = canvas.getBoundingClientRect();
       const k = canvas.clientWidth / rc.width;   // undo any hover scale
-      const x = (e.clientX - rc.left) * k;
-      const y = (e.clientY - rc.top) * k;
-      const R = canvas.clientWidth / 2;
-      const dist = Math.hypot(x - R, y - R);
-      if (dist < R * 0.36 || dist > R * 0.99) { last = null; return; }
-      // into the record's rotating frame at this instant
-      const th = discAngle();
-      const cos = Math.cos(th);
-      const sin = Math.sin(th);
-      const rx = (x - R) * cos + (y - R) * sin;
-      const ry = -(x - R) * sin + (y - R) * cos;
-      segs.push({ x1: last ? last.x : rx, y1: last ? last.y : ry, x2: rx, y2: ry, t: performance.now() });
-      last = { x: rx, y: ry };
+      cursor = { x: (e.clientX - rc.left) * k, y: (e.clientY - rc.top) * k };
       if (!raf) raf = requestAnimationFrame(draw);
     });
 
+    function engrave() {
+      if (!cursor) return;
+      const R = canvas.clientWidth / 2;
+      const dist = Math.hypot(cursor.x - R, cursor.y - R);
+      if (dist < R * 0.36 || dist > R * 0.99) { last = null; return; }
+      const th = discAngle();
+      const cos = Math.cos(th);
+      const sin = Math.sin(th);
+      const rx = (cursor.x - R) * cos + (cursor.y - R) * sin;
+      const ry = -(cursor.x - R) * sin + (cursor.y - R) * cos;
+      segs.push({ x1: last ? last.x : rx, y1: last ? last.y : ry, x2: rx, y2: ry, t: performance.now() });
+      last = { x: rx, y: ry };
+    }
+
     function draw(now) {
+      engrave();                           // a resting stylus still cuts
       const R = vinyl.clientWidth / 2;
       ctx.clearRect(0, 0, R * 2, R * 2);
       ctx.save();
@@ -605,7 +609,7 @@
         ctx.stroke();
       }
       ctx.restore();
-      raf = segs.length ? requestAnimationFrame(draw) : 0;
+      raf = (cursor || segs.length) ? requestAnimationFrame(draw) : 0;
     }
   })();
 </script>
