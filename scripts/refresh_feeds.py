@@ -8,6 +8,7 @@ import json
 import os
 import re
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -22,8 +23,12 @@ SHELF_SIZE = 8
 
 def fetch(url, binary=False):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        data = r.read()
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            data = r.read()
+    except urllib.error.HTTPError as e:
+        detail = e.read()[:200].decode("utf-8", "replace")
+        raise RuntimeError(f"HTTP {e.code} from {url.split('?')[0]}: {detail}") from None
     return data if binary else data.decode("utf-8", "replace")
 
 
