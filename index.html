@@ -699,6 +699,7 @@
     const ORIGIN_X = 0.45;
     let centers = [];
     let halfW = 64;
+    let ox = 0;
     let lastFocus = [0, false];
 
     function measure() {
@@ -709,7 +710,8 @@
       const total = w + stride * (caseEls.length - 1);
       const sw = shelfEl.clientWidth;
       const start = Math.max(0, (sw - total) / 2);
-      const ox = sw * ORIGIN_X;
+      // use the REAL camera position, not an assumed one
+      ox = parseFloat(getComputedStyle(shelfEl).perspectiveOrigin) || sw * ORIGIN_X;
       halfW = w / 2;
       centers = caseEls.map((c, i) => start + stride * i + w / 2 - ox);
     }
@@ -755,7 +757,7 @@
         if (hot && i === h && mobile) {
           // exact clamp: the grown case must sit inside the clipped container
           const sw = shelfEl.clientWidth;
-          const L = centers[i] - halfW + sw * ORIGIN_X;
+          const L = centers[i] - halfW + ox;
           const grow = halfW * (focusScale - 1);
           const over = L + halfW * 2 + tx + grow - (sw - 2);
           if (over > 0) tx -= over;
