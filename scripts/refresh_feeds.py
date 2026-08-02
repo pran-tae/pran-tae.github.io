@@ -68,7 +68,7 @@ def refresh_flicks(index):
         t = html.escape(f["title"], quote=True)
         lines.append(
             f'        <a class="case" style="--n:{n};--z:{SHELF_SIZE - n}" href="{f["link"]}" '
-            f'data-title="{t}" data-stars="{f["stars"]}">'
+            f'data-title="{t}" data-stars="{f["stars"]}" target="_blank" rel="noopener">'
             f'<img src="{path}" alt="{t} poster"></a>'
         )
     return replace_block(index, "<!-- SHELF:START -->", "<!-- SHELF:END -->", "\n" + "\n".join(lines) + "\n")
@@ -103,7 +103,7 @@ def refresh_jams(index):
     )
     return replace_block(
         index, "<!-- PLAY:START -->", "<!-- PLAY:END -->",
-        f'<a class="play" href="{url}" aria-label="Open this track"></a>',
+        f'<a class="play" href="{url}" aria-label="Open this track" target="_blank" rel="noopener"></a>',
     )
 
 
