@@ -797,7 +797,21 @@
 
   const deck = document.getElementById("deck");
   const vinyl = deck.querySelector(".vinyl");
-  vinyl.addEventListener("click", () => {
+  let pressAt = null;
+  let scratched = false;
+  vinyl.addEventListener("pointerdown", (e) => {
+    pressAt = { x: e.clientX, y: e.clientY };
+    scratched = false;
+  });
+  vinyl.addEventListener("pointermove", (e) => {
+    if (pressAt && Math.hypot(e.clientX - pressAt.x, e.clientY - pressAt.y) > 8) scratched = true;
+  });
+  vinyl.addEventListener("click", (e) => {
+    if (scratched) {            // a scratch is not a tap
+      e.preventDefault();
+      scratched = false;
+      return;
+    }
     deck.classList.add("burst");
     setTimeout(() => deck.classList.remove("burst"), 900);
   });
