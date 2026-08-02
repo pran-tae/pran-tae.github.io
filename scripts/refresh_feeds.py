@@ -117,7 +117,7 @@ def refresh_jams(index):
         index, "<!-- JAM:START -->", "<!-- JAM:END -->",
         f'\n          <p class="track">{name}</p>\n          <p class="artist">{artist}</p>\n',
     )
-    return re.sub(r'(<a class="vinyl"[^>]*href=")[^"]*', lambda m: m.group(1) + url, index)
+    return index
 
 
 def main():
