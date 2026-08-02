@@ -784,7 +784,7 @@
     const io = new IntersectionObserver((entries) => {
       if (entries.some((e) => e.isIntersecting)) {
         if (window.__shelfGate && !window.__shelfGate()) window.__shelfWant = true;
-        else shelf.classList.add("in");
+        else { shelf.classList.add("in"); window.__inAt = performance.now(); }
         io.disconnect();
       }
     }, { threshold: 0.25 });
@@ -894,6 +894,12 @@
     }
 
     function recenter() {
+      const since = performance.now() - (window.__inAt || -Infinity);
+      if (since >= 0 && since < 1150) {          // entrance in flight: measure after it lands
+        clearTimeout(recenter._d);
+        recenter._d = setTimeout(recenter, 1200 - since);
+        return;
+      }
       if (window.matchMedia("(max-width: 560px)").matches) {
         shelfEl.style.transform = "";          // mobile fills the container by construction
         shelfEl.style.setProperty("--recenter", "0px");
@@ -935,12 +941,14 @@
     function remeasure() { measure(); snapRefan(); recenter(); }
     measure();
     window.addEventListener("resize", remeasure);
-    window.addEventListener("load", remeasure);
     let pendingImgs = 0;
     function imgDone() {
       remeasure();
       pendingImgs--;
-      if (pendingImgs === 0 && window.__shelfWant) shelfEl.classList.add("in");
+      if (pendingImgs === 0 && window.__shelfWant) {
+        shelfEl.classList.add("in");
+        window.__inAt = performance.now();
+      }
     }
     caseEls.forEach((c) => {
       const im = c.querySelector("img");
