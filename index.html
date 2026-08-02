@@ -903,7 +903,7 @@
         if (!area) return;
         const centroid = moment / area;   // center of visual mass, not of the bounding box
         const prev = parseFloat(shelfEl.style.getPropertyValue("--recenter")) || 0;
-        const dx = prev + (wrap.left + wrap.width / 2) - centroid;
+        const dx = prev + (wrap.left + wrap.width / 2) - centroid + 8;
         shelfEl.style.setProperty("--recenter", dx.toFixed(1) + "px");
         shelfEl.style.transform = "translateX(" + dx.toFixed(1) + "px)";
       });
