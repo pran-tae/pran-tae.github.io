@@ -725,7 +725,10 @@
         c.classList.toggle("is-hot", hot && i === h);
         const z = STEP * d;
         const mobile = window.matchMedia("(max-width: 560px)").matches;
-        let tx = ((centers[i] - halfW) * z) / LENS;  // pin each case's LEFT EDGE: slivers never creep
+        // pin the VISIBLE edge: left wing shows left slivers, right wing shows right slivers.
+        // right-edge pinning also locks the last case inside the container at every focus.
+        const pin = i > h ? centers[i] + halfW : centers[i] - halfW;
+        let tx = (pin * z) / LENS;
         if (hot && i !== h) {
           // neighbors yield locally, like the reference: pushed out from the expansion
           const away = i < h ? -1 : 1;
