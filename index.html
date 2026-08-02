@@ -341,15 +341,11 @@
   }
   .deck.swapping .sleeve { opacity: 1; transform: rotate(-7deg) translate(0, 0) scale(1); }
   .deck-card {
-    border: 1px solid var(--rule);
-    border-radius: 14px;
-    padding: 1.3rem 12.5rem 1.3rem 1.5rem;
-    height: 184px;
+    height: 200px;
     box-sizing: border-box;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 1rem;
+    align-items: center;
+    padding: 0 13rem 0 0.25rem;
   }
   .deck-info { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
   .track {
@@ -481,7 +477,7 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   @media (max-width: 560px) {
-    .deck-card { padding-right: 9.5rem; height: 160px; }
+    .deck-card { padding-right: 10.5rem; height: 168px; }
     .vinyl { width: 128px; height: 128px; right: 12px; }
     .case { margin-right: -58px; }
     .case img { height: 150px; }
@@ -490,7 +486,7 @@
     .shelf { padding-top: 3rem; }
   }
   @media (max-width: 400px) {
-    .deck-card { padding-right: 8rem; height: 142px; }
+    .deck-card { padding-right: 8.5rem; height: 146px; }
     .vinyl { width: 108px; height: 108px; right: 10px; }
     .track { font-size: 1.15rem; }
   }
