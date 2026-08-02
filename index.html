@@ -123,10 +123,13 @@
 
   /* ---------- ledger rows ---------- */
   ul.ledger { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; }
-  .ledger li { display: flex; align-items: baseline; gap: 0.6rem; }
-  .ledger .what { flex-shrink: 1; min-width: 0; }
+  .ledger li { display: flex; flex-direction: column; gap: 0.1rem; }
+  .ledger .line { display: flex; align-items: baseline; gap: 0.6rem; }
+  .ledger .who { flex-shrink: 1; min-width: 0; }
   .ledger .dots {
     flex: 1;
+    align-self: flex-end;
+    margin-bottom: 5px;
     border-bottom: 1px dotted var(--leader);
     min-width: 2.5rem;
   }
@@ -145,7 +148,8 @@
   section p { margin: 0; }
 
   /* ---------- flicks shelf ---------- */
-  .shelf-wrap { overflow-x: auto; overflow-y: hidden; padding-bottom: 2.4rem; }
+  .shelf-wrap { overflow-x: auto; overflow-y: hidden; padding-bottom: 2.4rem; scrollbar-width: none; }
+  .shelf-wrap::-webkit-scrollbar { display: none; }
   .shelf {
     display: flex;
     align-items: flex-end;
@@ -157,12 +161,14 @@
   .case {
     flex: none;
     position: relative;
-    margin-right: -40px;
+    margin-right: -46px;
     transform: rotateY(-35deg);
     transform-origin: left center;
     transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
     border-radius: 3px;
     z-index: var(--z);
+  }
+  .shelf.in .case {
     animation: case-in 480ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
     animation-delay: calc(var(--n) * 70ms);
   }
@@ -288,7 +294,7 @@
     border-radius: 50%;
     background:
       radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.12), transparent 55%),
-      repeating-radial-gradient(circle at center, #172E1D 0 2px, #295231 2px 4px);
+      repeating-radial-gradient(circle at center, #23402A 0 2px, #3A6B45 2px 4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -346,9 +352,9 @@
   }
   @media (max-width: 480px) {
     .ledger .dots { display: none; }
-    .ledger li { justify-content: space-between; }
+    .ledger .line { justify-content: space-between; }
   }
-  @media (prefers-reduced-motion: reduce) { .disc { animation: none; } .case { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .disc { animation: none; } .shelf.in .case { animation: none; } }
 
   /* ---------- footer ---------- */
   footer {
@@ -392,28 +398,28 @@
     <h2 class="label"><span class="mark">✳</span> Work</h2>
     <ul class="ledger">
       <li>
-        <span class="what"><a href="https://www.conduit.ai" target="_blank" rel="noopener">Conduit</a> · engineering<span class="sub">agentic ops, messaging channels, translation, smart locks</span></span>
-        <span class="dots"></span><span class="when">2026</span>
+        <span class="line"><span class="who"><a href="https://www.conduit.ai" target="_blank" rel="noopener">Conduit</a> · engineering</span><span class="dots"></span><span class="when">2026</span></span>
+        <span class="sub">agentic ops, messaging channels, translation, smart locks</span>
       </li>
       <li>
-        <span class="what"><a href="https://ai-analytics.wharton.upenn.edu/" target="_blank" rel="noopener">Wharton Analytics</a> · technical lead<span class="sub">pricing for ShiftKey, forecasting for RxSense, funnels for IKEA</span></span>
-        <span class="dots"></span><span class="when">2024–</span>
+        <span class="line"><span class="who"><a href="https://ai-analytics.wharton.upenn.edu/" target="_blank" rel="noopener">Wharton Analytics</a> · technical lead</span><span class="dots"></span><span class="when">2024–</span></span>
+        <span class="sub">pricing for ShiftKey, forecasting for RxSense, funnels for IKEA</span>
       </li>
       <li>
-        <span class="what"><a href="https://www.linkedin.com/company/infinitas-by-krungthai" target="_blank" rel="noopener">Infinitas by Krungthai</a> · data science<span class="sub">ad allocation policy, multilingual banking Q&amp;A</span></span>
-        <span class="dots"></span><span class="when">2025</span>
+        <span class="line"><span class="who"><a href="https://www.linkedin.com/company/infinitas-by-krungthai" target="_blank" rel="noopener">Infinitas by Krungthai</a> · data science</span><span class="dots"></span><span class="when">2025</span></span>
+        <span class="sub">ad allocation policy, multilingual banking Q&amp;A</span>
       </li>
       <li>
-        <span class="what"><a href="https://lmwn.com/" target="_blank" rel="noopener">LINE MAN Wongnai</a> · credit risk<span class="sub">loan default models for merchants</span></span>
-        <span class="dots"></span><span class="when">2024</span>
+        <span class="line"><span class="who"><a href="https://lmwn.com/" target="_blank" rel="noopener">LINE MAN Wongnai</a> · credit risk</span><span class="dots"></span><span class="when">2024</span></span>
+        <span class="sub">loan default models for merchants</span>
       </li>
       <li>
-        <span class="what">Penn · teaching<span class="sub">Big Data Analytics TA; Fixed Income head TA</span></span>
-        <span class="dots"></span><span class="when">2024–</span>
+        <span class="line"><span class="who">Penn · teaching</span><span class="dots"></span><span class="when">2024–</span></span>
+        <span class="sub">Big Data Analytics TA; Fixed Income head TA</span>
       </li>
       <li>
-        <span class="what">Penn Spark · project lead<span class="sub">Penn.Place, a community-driven 3D pixel canvas</span></span>
-        <span class="dots"></span><span class="when">2024–</span>
+        <span class="line"><span class="who">Penn Spark · project lead</span><span class="dots"></span><span class="when">2024–</span></span>
+        <span class="sub">Penn.Place, a community-driven 3D pixel canvas</span>
       </li>
     </ul>
   </section>
@@ -486,6 +492,16 @@
     el.textContent = names[i];
     bubble.classList.toggle("show", names[i] === "Term");
   });
+
+  const shelf = document.querySelector(".shelf");
+  if (shelf && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { shelf.classList.add("in"); io.disconnect(); }
+    }, { threshold: 0.25 });
+    io.observe(shelf);
+  } else if (shelf) {
+    shelf.classList.add("in");
+  }
 
   const deck = document.getElementById("deck");
   deck.querySelector(".rpm-toggle").addEventListener("click", (e) => {
