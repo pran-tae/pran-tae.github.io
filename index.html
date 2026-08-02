@@ -538,9 +538,17 @@
     canvas.className = "groove-marks";
     vinyl.appendChild(canvas);
     const ctx = canvas.getContext("2d");
+    const discEl = vinyl.querySelector(".disc");
     let segs = [];
     let last = null;
     let raf = 0;
+
+    function discAngle() {
+      const t = getComputedStyle(discEl).transform;
+      if (!t || t === "none") return 0;
+      const m = t.match(/matrix\(([-\d.e]+), ([-\d.e]+)/);
+      return m ? Math.atan2(parseFloat(m[2]), parseFloat(m[1])) : 0;
+    }
 
     function size() {
       const d = vinyl.clientWidth;
@@ -561,8 +569,14 @@
       const R = canvas.clientWidth / 2;
       const dist = Math.hypot(x - R, y - R);
       if (dist < R * 0.36 || dist > R * 0.99) { last = null; return; }
-      segs.push({ x1: last ? last.x : x, y1: last ? last.y : y, x2: x, y2: y, t: performance.now() });
-      last = { x, y };
+      // into the record's rotating frame at this instant
+      const th = discAngle();
+      const cos = Math.cos(th);
+      const sin = Math.sin(th);
+      const rx = (x - R) * cos + (y - R) * sin;
+      const ry = -(x - R) * sin + (y - R) * cos;
+      segs.push({ x1: last ? last.x : rx, y1: last ? last.y : ry, x2: rx, y2: ry, t: performance.now() });
+      last = { x: rx, y: ry };
       if (!raf) raf = requestAnimationFrame(draw);
     });
 
@@ -577,6 +591,8 @@
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.globalCompositeOperation = "lighter";
+      ctx.translate(R, R);
+      ctx.rotate(discAngle());             // the platter carries the marks
       segs = segs.filter((g) => now - g.t < 1400);
       for (const g of segs) {
         const life = 1 - (now - g.t) / 1400;
