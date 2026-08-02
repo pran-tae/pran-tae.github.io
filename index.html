@@ -327,7 +327,10 @@
     background: #23231F;
     transform: rotate(-14deg);
   }
-  .deck.swapping .arm-rod { transform: rotate(4deg); }
+  .deck.swapping .arm-rod, .deck.empty .arm-rod { transform: rotate(4deg); }
+  .deck.empty .vinyl { opacity: 0; pointer-events: none; }
+  .deck-info { transition: opacity 420ms ease; }
+  .deck.empty .deck-info { opacity: 0; }
   .tt-led {
     position: absolute;
     top: 9px;
@@ -938,6 +941,18 @@
     let current = trackEl.textContent.trim() + "|" + artistEl.textContent.trim();
     let synced = false;
     let timer = 0;
+    deck.classList.add("empty");
+    const emptyFallback = setTimeout(() => deck.classList.remove("empty"), 6000);
+
+    function dockVars() {
+      const sleeveEl = deck.querySelector(".sleeve");
+      const vr = vinyl.getBoundingClientRect();
+      const sr = sleeveEl.getBoundingClientRect();
+      const sw = parseFloat(getComputedStyle(sleeveEl).width);
+      deck.style.setProperty("--sx", (sr.left + sr.width / 2 + 52 - (vr.left + vr.width / 2)).toFixed(1) + "px");
+      deck.style.setProperty("--sy", (sr.top + sr.height / 2 + 70 - (vr.top + vr.height / 2)).toFixed(1) + "px");
+      deck.style.setProperty("--ss", (sw / vr.width * 0.68).toFixed(2));
+    }
 
     async function poll() {
       try {
@@ -966,17 +981,29 @@
           trackEl.textContent = name;
           artistEl.textContent = artist;
         };
-        if (firstSync) { applyMedia(); applyText(); return; }   // first sync after load: no ceremony
+        if (firstSync) {
+          clearTimeout(emptyFallback);
+          applyMedia();
+          applyText();
+          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !deck.classList.contains("empty")) {
+            deck.classList.remove("empty");
+            return;
+          }
+          dockVars();                     // the arrival: sleeve in, record onto the platter
+          deck.classList.add("swapping");
+          setTimeout(() => {
+            deck.classList.remove("empty");
+            vinyl.classList.add("load");
+          }, 420);
+          setTimeout(() => {
+            vinyl.classList.remove("load");
+            deck.classList.remove("swapping");
+          }, 1800);
+          return;
+        }
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { applyMedia(); applyText(); return; }
         const info = document.querySelector(".deck-info");
-        const sleeveEl = deck.querySelector(".sleeve");
-        const vr = vinyl.getBoundingClientRect();
-        const sr = sleeveEl.getBoundingClientRect();
-        const sw = parseFloat(getComputedStyle(sleeveEl).width);
-        // hidden pose is translate(-52px, -70px); shown center = measured center - that offset
-        deck.style.setProperty("--sx", (sr.left + sr.width / 2 + 52 - (vr.left + vr.width / 2)).toFixed(1) + "px");
-        deck.style.setProperty("--sy", (sr.top + sr.height / 2 + 70 - (vr.top + vr.height / 2)).toFixed(1) + "px");
-        deck.style.setProperty("--ss", (sw / vr.width * 0.68).toFixed(2));
+        dockVars();
         deck.classList.add("swapping");
         const ghost = document.createElement("div");
         ghost.className = "vinyl-ghost";
