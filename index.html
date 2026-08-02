@@ -279,12 +279,12 @@
     border-radius: 50%;
     background:
       radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.07), transparent 55%),
-      repeating-radial-gradient(circle at center, #17160F 0 1.5px, #211F16 1.5px 3px);
+      repeating-radial-gradient(circle at center, #1C3822 0 1.5px, #234428 1.5px 3px);
     display: flex;
     align-items: center;
     justify-content: center;
     animation: spin 1.81s linear infinite;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35), 0 6px 16px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 0 0 1px rgba(16, 42, 22, 0.45), 0 6px 16px rgba(16, 42, 22, 0.25);
   }
   .deck.fast .disc { animation-duration: 1.33s; }
   .disc-label {
@@ -296,6 +296,22 @@
     background-size: cover;
     background-position: center;
     box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55);
+  }
+  .disc-label.default {
+    background-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(16, 42, 22, 0.55), inset 0 0 0 5px rgba(251, 250, 247, 0.16);
+  }
+  .disc-label.default::before {
+    content: "ปรานต์ · 33⅓ · stereo";
+    position: absolute;
+    top: 26%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.48rem;
+    letter-spacing: 0.12em;
+    color: rgba(251, 250, 247, 0.9);
   }
   .disc-label .hole {
     position: absolute;

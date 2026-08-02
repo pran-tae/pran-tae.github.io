@@ -100,13 +100,18 @@ def refresh_jams(index):
     name = html.escape(t["name"], quote=True)
     artist = html.escape(t["artist"]["#text"], quote=True)
     url = html.escape(t.get("url", f"https://www.last.fm/user/{LASTFM_USER}"), quote=True)
+    label_tag = re.compile(r'<div class="disc-label[^"]*" style="background-image:[^"]*">')
     images = [i["#text"] for i in t.get("image", []) if i.get("#text")]
     if images:
         art = fetch(images[-1], binary=True)
         with open(os.path.join(ROOT, "assets/album.jpg"), "wb") as fh:
             fh.write(art)
         v = hashlib.md5(art).hexdigest()[:8]
-        index = re.sub(r"url\('assets/album\.jpg[^']*'\)", f"url('assets/album.jpg?v={v}')", index)
+        index = label_tag.sub(
+            f'<div class="disc-label" style="background-image:url(\'assets/album.jpg?v={v}\')">', index)
+    else:
+        # no artwork for this track: fall back to the imprint label
+        index = label_tag.sub('<div class="disc-label default" style="background-image:none">', index)
 
     index = replace_block(
         index, "<!-- JAM:START -->", "<!-- JAM:END -->",
