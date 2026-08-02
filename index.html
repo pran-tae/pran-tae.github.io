@@ -684,7 +684,11 @@
         const d = Math.abs(i - h);
         c.classList.toggle("is-hot", hot && i === h);
         const z = STEP * d;
-        const tx = (centers[i] * z) / LENS;  // cancel projection drift: the wave moves, the cases don't
+        let tx = (centers[i] * z) / LENS;  // cancel projection drift: the wave moves, the cases don't
+        if (hot && i === h && window.matchMedia("(max-width: 560px)").matches) {
+          if (i === 0) tx += 10;                        // grown edge cases tuck inside the clip
+          else if (i === caseEls.length - 1) tx -= 10;
+        }
         let t = "translateX(" + tx.toFixed(1) + "px) translateZ(" + -z + "px)";
         if (i < h) t += " rotateY(10deg)";
         else if (i > h) t += " rotateY(-14deg)";
