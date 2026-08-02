@@ -775,7 +775,24 @@
       hotIndex = hot ? h : null;
     }
 
-    function remeasure() { measure(); refan(lastFocus[0], lastFocus[1]); }
+    function recenter() {
+      requestAnimationFrame(() => {
+        const wrap = shelfEl.parentElement.getBoundingClientRect();
+        let lo = Infinity;
+        let hi = -Infinity;
+        caseEls.forEach((c) => {
+          const r = c.getBoundingClientRect();
+          lo = Math.min(lo, r.left);
+          hi = Math.max(hi, r.right);
+        });
+        if (!isFinite(lo)) return;
+        const prev = parseFloat(shelfEl.style.getPropertyValue("--recenter")) || 0;
+        const dx = prev + (wrap.left + wrap.width / 2) - (lo + hi) / 2;
+        shelfEl.style.setProperty("--recenter", dx.toFixed(1) + "px");
+        shelfEl.style.transform = "translateX(" + dx.toFixed(1) + "px)";
+      });
+    }
+    function remeasure() { measure(); refan(lastFocus[0], lastFocus[1]); recenter(); }
     measure();
     window.addEventListener("resize", remeasure);
     window.addEventListener("load", remeasure);
@@ -785,6 +802,7 @@
     });
 
     refan(0, false);
+    recenter();
     if (touch) {
       caseEls.forEach((c, i) => {
         c.addEventListener("click", (e) => {
