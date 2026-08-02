@@ -638,8 +638,14 @@
       hotIndex = hot ? h : null;
     }
 
+    function remeasure() { measure(); refan(lastFocus[0], lastFocus[1]); }
     measure();
-    window.addEventListener("resize", () => { measure(); refan(lastFocus[0], lastFocus[1]); });
+    window.addEventListener("resize", remeasure);
+    window.addEventListener("load", remeasure);
+    caseEls.forEach((c) => {
+      const im = c.querySelector("img");
+      if (im && !im.complete) im.addEventListener("load", remeasure);
+    });
 
     refan(0, false);
     if (touch) {
