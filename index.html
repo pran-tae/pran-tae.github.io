@@ -327,7 +327,7 @@
     background: #23231F;
     transform: rotate(-14deg);
   }
-  .deck.swapping .arm-rod, .deck.empty .arm-rod { transform: rotate(4deg); }
+  .deck.swapping .arm-rod, .deck.empty .arm-rod, .deck.fallen .arm-rod { transform: rotate(4deg); }
   .deck.empty .vinyl { opacity: 0; pointer-events: none; }
   .deck-info { transition: opacity 420ms ease; }
   .deck.empty .deck-info { opacity: 0; }
@@ -409,6 +409,21 @@
   .vinyl:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
   .deck.burst .disc { animation-duration: 0.45s; }
   .vinyl.bounce { animation: vinyl-bounce 520ms cubic-bezier(0.34, 1.4, 0.5, 1); }
+  .vinyl.falloff { animation: vinyl-falloff 750ms cubic-bezier(0.5, 0, 0.8, 0.4) forwards; }
+  .vinyl.reland { animation: vinyl-reland 680ms cubic-bezier(0.22, 1, 0.36, 1); }
+  @keyframes vinyl-falloff {
+    0% { transform: translateY(-50%); opacity: 1; }
+    22% { transform: translateY(-53%) translateX(-8px) rotate(-5deg); opacity: 1; }
+    60% { transform: translateY(-18%) translateX(90px) rotate(22deg); opacity: 1; }
+    95% { transform: translateY(75%) translateX(170px) rotate(42deg); opacity: 1; }
+    100% { transform: translateY(80%) translateX(175px) rotate(44deg); opacity: 0; }
+  }
+  @keyframes vinyl-reland {
+    0% { transform: translateY(-200%) rotate(-8deg); opacity: 0; }
+    18% { opacity: 1; }
+    70% { transform: translateY(-46%) rotate(2deg); opacity: 1; }
+    100% { transform: translateY(-50%) rotate(0deg); opacity: 1; }
+  }
   @keyframes vinyl-bounce {
     0% { transform: translateY(-50%) scale(1); }
     30% { transform: translateY(-60%) scale(1.05); }
@@ -671,11 +686,19 @@
     if (dropping) return;
     dropping = true;
     i = (i + 1) % names.length;
+    const oldW = el.offsetWidth;
     ncNew.textContent = names[i];
+    const newW = ncNew.offsetWidth;
+    el.style.width = oldW + "px";
+    void el.offsetWidth;
+    el.style.transition = "width 260ms cubic-bezier(0.22, 1, 0.36, 1)";
+    el.style.width = newW + "px";
     el.classList.add("dropping");
     setTimeout(() => {
       ncOld.textContent = names[i];
       el.classList.remove("dropping");
+      el.style.width = "";
+      el.style.transition = "";
       bubble.classList.toggle("show", names[i] === "Term");
       dropping = false;
     }, 575);
@@ -844,17 +867,45 @@
   vinyl.addEventListener("pointermove", (e) => {
     if (pressAt && Math.hypot(e.clientX - pressAt.x, e.clientY - pressAt.y) > 8) scratched = true;
   });
+  const discEl2 = vinyl.querySelector(".disc");
+  let energy = 0;
+  let fallen = false;
+  function setSpin() {
+    discEl2.style.animationDuration = (1.81 / (1 + energy * 0.55)).toFixed(2) + "s";
+  }
+  setInterval(() => {
+    if (fallen || energy <= 0) return;
+    energy = Math.max(0, energy - 0.4);
+    setSpin();
+  }, 300);
   vinyl.addEventListener("click", () => {
     if (scratched) {            // a scratch is not a tap
       scratched = false;
       return;
     }
-    deck.classList.add("burst");
+    if (fallen) return;
+    energy += 1;
+    setSpin();
+    if (energy >= 5 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      fallen = true;
+      deck.classList.add("fallen");
+      vinyl.classList.add("falloff");
+      setTimeout(() => {
+        energy = 0;
+        setSpin();
+        vinyl.classList.remove("falloff");
+        vinyl.classList.add("reland");
+      }, 1900);
+      setTimeout(() => {
+        vinyl.classList.remove("reland");
+        deck.classList.remove("fallen");
+        fallen = false;
+      }, 2620);
+      return;
+    }
+    vinyl.classList.remove("bounce");
+    void vinyl.offsetWidth;
     vinyl.classList.add("bounce");
-    setTimeout(() => {
-      deck.classList.remove("burst");
-      vinyl.classList.remove("bounce");
-    }, 900);
   });
 
   // touching the grooves leaves a soft trail that fades
