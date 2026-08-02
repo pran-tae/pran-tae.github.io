@@ -553,13 +553,14 @@
 
     vinyl.addEventListener("pointerleave", () => { last = null; });
     vinyl.addEventListener("pointermove", (e) => {
-      const r = vinyl.getBoundingClientRect();
-      const R = r.width / 2;
-      const x = e.clientX - r.left;
-      const y = e.clientY - r.top;
+      const rc = canvas.getBoundingClientRect();
+      const k = canvas.clientWidth / rc.width;   // undo any hover scale
+      const x = (e.clientX - rc.left) * k;
+      const y = (e.clientY - rc.top) * k;
+      const R = canvas.clientWidth / 2;
       const dist = Math.hypot(x - R, y - R);
       if (dist < R * 0.36 || dist > R * 0.99) { last = null; return; }
-      if (last) segs.push({ x1: last.x, y1: last.y, x2: x, y2: y, t: performance.now() });
+      segs.push({ x1: last ? last.x : x, y1: last ? last.y : y, x2: x, y2: y, t: performance.now() });
       last = { x, y };
       if (!raf) raf = requestAnimationFrame(draw);
     });
@@ -574,14 +575,15 @@
       ctx.clip("evenodd");
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
-      segs = segs.filter((g) => now - g.t < 900);
+      ctx.globalCompositeOperation = "lighter";
+      segs = segs.filter((g) => now - g.t < 1400);
       for (const g of segs) {
-        const life = 1 - (now - g.t) / 900;
+        const life = 1 - (now - g.t) / 1400;
         ctx.beginPath();
         ctx.moveTo(g.x1, g.y1);
         ctx.lineTo(g.x2, g.y2);
-        ctx.strokeStyle = `rgba(219, 238, 219, ${0.38 * life * life})`;
-        ctx.lineWidth = 3 * life;
+        ctx.strokeStyle = `rgba(226, 244, 210, ${0.55 * life})`;
+        ctx.lineWidth = 1.5 + 2.5 * life;
         ctx.stroke();
       }
       ctx.restore();
