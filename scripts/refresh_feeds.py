@@ -3,6 +3,7 @@
 (Last.fm API) in index.html. Safe by design: any fetch failure leaves the
 current content in place and exits 0."""
 
+import hashlib
 import html
 import json
 import os
@@ -68,8 +69,10 @@ def refresh_flicks(index):
     lines = []
     for n, f in enumerate(films):
         path = f"assets/posters/p{n + 1}.jpg"
+        data = fetch(f["poster"], binary=True)
         with open(os.path.join(ROOT, path), "wb") as fh:
-            fh.write(fetch(f["poster"], binary=True))
+            fh.write(data)
+        path += "?v=" + hashlib.md5(data).hexdigest()[:8]
         t = html.escape(f["title"], quote=True)
         lines.append(
             f'        <a class="case" style="--n:{n};--z:{SHELF_SIZE - n}" href="{f["link"]}" '
@@ -99,8 +102,11 @@ def refresh_jams(index):
     url = html.escape(t.get("url", f"https://www.last.fm/user/{LASTFM_USER}"), quote=True)
     images = [i["#text"] for i in t.get("image", []) if i.get("#text")]
     if images:
+        art = fetch(images[-1], binary=True)
         with open(os.path.join(ROOT, "assets/album.jpg"), "wb") as fh:
-            fh.write(fetch(images[-1], binary=True))
+            fh.write(art)
+        v = hashlib.md5(art).hexdigest()[:8]
+        index = re.sub(r"url\('assets/album\.jpg[^']*'\)", f"url('assets/album.jpg?v={v}')", index)
 
     index = replace_block(
         index, "<!-- JAM:START -->", "<!-- JAM:END -->",
