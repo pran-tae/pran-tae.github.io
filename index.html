@@ -907,22 +907,16 @@
       }
       requestAnimationFrame(() => {
         const wrap = shelfEl.parentElement.getBoundingClientRect();
-        let area = 0;
-        let moment = 0;
         let lo = Infinity;
         let hi = -Infinity;
         caseEls.forEach((c) => {
           const r = c.getBoundingClientRect();
-          const a = r.width * r.height;
-          area += a;
-          moment += a * (r.left + r.width / 2);
           lo = Math.min(lo, r.left);
           hi = Math.max(hi, r.right);
         });
-        if (!area) return;
-        const centroid = moment / area;   // center of visual mass, not of the bounding box
+        if (!isFinite(lo) || hi <= lo) return;
         const prev = parseFloat(shelfEl.style.getPropertyValue("--recenter")) || 0;
-        let shift = (wrap.left + wrap.width / 2) - centroid + 8;
+        let shift = (wrap.left + wrap.width / 2) - (lo + hi) / 2 + 6;
         const shiftMax = (wrap.right - 2) - hi;   // never push a case past the container
         const shiftMin = (wrap.left + 2) - lo;
         if (shiftMin <= shiftMax) shift = Math.min(shiftMax, Math.max(shiftMin, shift));
