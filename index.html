@@ -257,6 +257,28 @@
   .vinyl:active { transform: translateY(-50%) scale(0.97); }
   .vinyl:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
   .deck.burst .disc { animation-duration: 0.45s; }
+  .vinyl.eject, .vinyl.load { z-index: 40; }
+  .vinyl.eject {
+    animation: vinyl-eject 400ms cubic-bezier(0.55, 0, 0.8, 0.4) forwards;
+  }
+  .vinyl.load {
+    animation: vinyl-load 560ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @keyframes vinyl-eject {
+    to { transform: translateY(-175%) translateX(24%) rotate(18deg); opacity: 0; }
+  }
+  @keyframes vinyl-load {
+    from { transform: translateY(-190%) translateX(-8%) rotate(-14deg); opacity: 0; }
+    70% { transform: translateY(-46%) rotate(2deg); opacity: 1; }
+    to { transform: translateY(-50%); }
+  }
+  .deck-info.swap { animation: info-swap 1000ms ease; }
+  @keyframes info-swap {
+    0% { opacity: 1; }
+    30% { opacity: 0; transform: translateY(4px); }
+    62% { opacity: 0; transform: translateY(-3px); }
+    100% { opacity: 1; transform: none; }
+  }
   .disc {
     position: relative;
     width: 100%;
@@ -627,16 +649,29 @@
         const sig = name + "|" + artist;
         if (sig === current) return;
         current = sig;
-        trackEl.textContent = name;
-        artistEl.textContent = artist;
-        if (t.url) vinyl.href = t.url;
-        const imgs = (t.image || []).map((i) => i["#text"]).filter(Boolean);
-        if (imgs.length) {
-          label.classList.remove("default");
-          label.style.backgroundImage = "url('" + imgs[imgs.length - 1] + "')";
-        }
-        deck.classList.add("burst");
-        setTimeout(() => deck.classList.remove("burst"), 900);
+        const apply = () => {
+          trackEl.textContent = name;
+          artistEl.textContent = artist;
+          if (t.url) vinyl.href = t.url;
+          const imgs = (t.image || []).map((i) => i["#text"]).filter(Boolean);
+          if (imgs.length) {
+            label.classList.remove("default");
+            label.style.backgroundImage = "url('" + imgs[imgs.length - 1] + "')";
+          }
+        };
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { apply(); return; }
+        const info = document.querySelector(".deck-info");
+        info.classList.add("swap");
+        vinyl.classList.add("eject");
+        setTimeout(() => {
+          apply();
+          vinyl.classList.remove("eject");
+          vinyl.classList.add("load");
+          setTimeout(() => {
+            vinyl.classList.remove("load");
+            info.classList.remove("swap");
+          }, 620);
+        }, 410);
       } catch (e) { /* keep the baked deck */ }
     }
 
