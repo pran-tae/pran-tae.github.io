@@ -117,10 +117,7 @@ def refresh_jams(index):
         index, "<!-- JAM:START -->", "<!-- JAM:END -->",
         f'\n          <p class="track">{name}</p>\n          <p class="artist">{artist}</p>\n',
     )
-    return replace_block(
-        index, "<!-- PLAY:START -->", "<!-- PLAY:END -->",
-        f'<a class="play" href="{url}" aria-label="Open this track" target="_blank" rel="noopener"></a>',
-    )
+    return re.sub(r'(<a class="vinyl"[^>]*href=")[^"]*', lambda m: m.group(1) + url, index)
 
 
 def main():
