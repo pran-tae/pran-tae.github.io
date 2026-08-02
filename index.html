@@ -730,10 +730,16 @@
         if (hot) {
           const c = caseEls[h];
           pill.textContent = (c.dataset.title || "") + "  " + (c.dataset.stars || "");
-          const sw = shelfEl.clientWidth;
-          const center = centers[h] + sw * ORIGIN_X;
-          const pw = pill.offsetWidth;
-          pill.style.left = Math.max(2, Math.min(center - pw / 2, sw - pw - 2)) + "px";
+          const place = () => {
+            const r = c.getBoundingClientRect();
+            const sr = shelfEl.getBoundingClientRect();
+            const center = r.left + r.width / 2 - sr.left;
+            const sw = sr.width;
+            const pw = pill.offsetWidth;
+            pill.style.left = Math.max(2, Math.min(center - pw / 2, sw - pw - 2)) + "px";
+          };
+          requestAnimationFrame(place);
+          setTimeout(place, 440);   // settle once the transition lands
           pill.classList.add("show");
         } else {
           pill.classList.remove("show");
