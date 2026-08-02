@@ -726,7 +726,7 @@
 </div>
 
 <script>
-  const names = ["Term", "ปรานต์", "Pran"];
+  const names = ["Term", "เตีม", "ปรานต์", "Pran"];
   let i = 0;
   const el = document.getElementById("name");
   const bubble = document.getElementById("nameBubble");
@@ -741,7 +741,7 @@
     ncNew.textContent = names[i];
     const newW = ncNew.offsetWidth;
     bubble.classList.remove("show");                 // the old name is on its way out
-    if (names[i] === "Term") {
+    if (names[i] === "Term" || names[i] === "เตีม") {
       setTimeout(() => bubble.classList.add("show"), 620);   // greet as the slam settles
     }
     const bang = document.querySelector(".bang");
