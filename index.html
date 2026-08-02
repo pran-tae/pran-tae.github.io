@@ -301,7 +301,7 @@
     border: 1px solid var(--rule);
     border-radius: 14px;
     padding: 1.3rem 12.5rem 1.3rem 1.5rem;
-    min-height: 180px;
+    height: 184px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -309,8 +309,16 @@
     gap: 1rem;
   }
   .deck-info { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
-  .track { font-size: 1.35rem; margin: 0; line-height: 1.25; }
-  .artist { margin: 0; color: var(--muted); }
+  .track {
+    font-size: 1.35rem;
+    margin: 0;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .artist { margin: 0; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .vinyl {
     position: absolute;
     top: 50%;
@@ -430,7 +438,7 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   @media (max-width: 560px) {
-    .deck-card { padding-right: 9.5rem; min-height: 160px; }
+    .deck-card { padding-right: 9.5rem; height: 160px; }
     .vinyl { width: 128px; height: 128px; right: 12px; }
     .case { margin-right: -58px; }
     .case img { height: 150px; }
@@ -439,7 +447,7 @@
     .shelf { padding-top: 3rem; }
   }
   @media (max-width: 400px) {
-    .deck-card { padding-right: 8rem; min-height: 150px; }
+    .deck-card { padding-right: 8rem; height: 142px; }
     .vinyl { width: 108px; height: 108px; right: 10px; }
     .track { font-size: 1.15rem; }
   }
@@ -787,7 +795,7 @@
         // hidden pose is translate(52px, -70px); shown center = measured center - that offset
         deck.style.setProperty("--sx", (sr.left + sr.width / 2 - 52 - (vr.left + vr.width / 2)).toFixed(1) + "px");
         deck.style.setProperty("--sy", (sr.top + sr.height / 2 + 70 - (vr.top + vr.height / 2)).toFixed(1) + "px");
-        deck.style.setProperty("--ss", (sw / vr.width * 0.82).toFixed(2));
+        deck.style.setProperty("--ss", (sw / vr.width * 0.68).toFixed(2));
         deck.classList.add("swapping");
         const ghost = document.createElement("div");
         ghost.className = "vinyl-ghost";
