@@ -696,15 +696,26 @@
         const d = Math.abs(i - h);
         c.classList.toggle("is-hot", hot && i === h);
         const z = STEP * d;
-        let tx = (centers[i] * z) / LENS;  // cancel projection drift: the wave moves, the cases don't
-        if (hot && i === h && window.matchMedia("(max-width: 560px)").matches) {
-          if (i === 0) tx += 10;                        // grown edge cases tuck inside the clip
-          else if (i === caseEls.length - 1) tx -= 10;
+        const mobile = window.matchMedia("(max-width: 560px)").matches;
+        let tx = (centers[i] * z) / LENS;  // cancel projection drift: the wave stays put
+        if (hot && i !== h) {
+          // neighbors yield locally, like the reference: pushed out from the expansion
+          const away = i < h ? -1 : 1;
+          const sp = d === 1 ? (mobile ? 8 : 14) : d === 2 ? (mobile ? 3 : 6) : 0;
+          let shift = away * sp;
+          if (mobile && i === caseEls.length - 1 && shift > 2) shift = 2;
+          if (mobile && i === 0 && shift < -2) shift = -2;
+          tx += shift;
         }
+        if (hot && i === h && mobile) {
+          if (i === 0) tx += 12;                        // grown edge cases tuck inside the clip
+          else if (i === caseEls.length - 1) tx -= 12;
+        }
+        const focusScale = mobile ? 1.1 : 1.16;
         let t = "translateX(" + tx.toFixed(1) + "px) translateZ(" + -z + "px)";
         if (i < h) t += " rotateY(10deg)";
         else if (i > h) t += " rotateY(-14deg)";
-        else t += hot ? " translateY(-26px) rotateY(-3deg) scale(1.06)" : " rotateY(-14deg)";
+        else t += hot ? " translateY(-26px) rotateY(-3deg) scale(" + focusScale + ")" : " rotateY(-14deg)";
         c.style.transform = t;
         c.style.zIndex = String(30 - d);
         c.style.filter = d ? "brightness(" + Math.max(0.8, 1 - 0.04 * d).toFixed(2) + ")" : "";
