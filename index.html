@@ -87,7 +87,7 @@
     white-space: nowrap;
     pointer-events: none;
   }
-  .name-cycle.dropping .nc-new { animation: nc-drop 720ms ease-in-out forwards; }
+  .name-cycle.dropping .nc-new { animation: nc-drop 820ms ease-in-out forwards; }
   .bang { display: inline-block; transform-origin: 50% 100%; margin-left: 0.09em; }
   .bang.grow { animation: bang-scoot 560ms ease-in-out; }
   .bang.shrink { animation: bang-scoot-rev 560ms ease-in-out; }
@@ -101,23 +101,23 @@
     40% { transform: rotate(12deg) translateY(-2px); }
     70% { transform: rotate(-6deg); }
   }
-  .name-cycle.dropping .nc-old { animation: nc-crush 720ms ease-in-out forwards; }
+  .name-cycle.dropping .nc-old { animation: nc-crush 820ms ease-in-out forwards; }
   @keyframes nc-drop {
     0% { transform: translateY(-1.5em) scaleY(1); opacity: 0; }
-    12% { opacity: 1; }
-    25% { transform: translateY(-0.62em) scaleY(1); }
-    38% { transform: translateY(-0.5em) scaleY(0.92); }
-    52% { transform: translateY(-0.95em) scaleY(1.06); }
-    66% { transform: translateY(-0.02em) scaleY(0.8); }
-    82% { transform: translateY(0) scaleY(1.06); }
+    11% { opacity: 1; }
+    22% { transform: translateY(-0.62em) scaleY(1); }
+    33% { transform: translateY(-0.5em) scaleY(0.92); }
+    56% { transform: translateY(-1.05em) scaleY(1.06); }
+    73% { transform: translateY(-0.02em) scaleY(0.8); }
+    87% { transform: translateY(0) scaleY(1.06); }
     100% { transform: translateY(0) scaleY(1); opacity: 1; }
   }
   @keyframes nc-crush {
-    0%, 25% { transform: scaleY(1); opacity: 1; }
-    38% { transform: scaleY(0.5); opacity: 1; }
-    52% { transform: scaleY(0.55); opacity: 1; }
-    66% { transform: scaleY(0.06); opacity: 1; }
-    74% { transform: scaleY(0.05); opacity: 0; }
+    0%, 22% { transform: scaleY(1); opacity: 1; }
+    33% { transform: scaleY(0.5); opacity: 1; }
+    56% { transform: scaleY(0.55); opacity: 1; }
+    73% { transform: scaleY(0.06); opacity: 1; }
+    81% { transform: scaleY(0.05); opacity: 0; }
     100% { transform: scaleY(0.05); opacity: 0; }
   }
   .name-wrap { position: relative; display: inline-block; }
@@ -445,18 +445,18 @@
     44% { transform: translate(343.2px, calc(-50% + 50.5px)); }
     48% { transform: translate(374.4px, calc(-50% + 96.1px)); }
     52% { transform: translate(405.6px, calc(-50% + 148.6px)); }
-    56% { transform: translate(436.8px, calc(-50% + 176.6px)); }
-    60% { transform: translate(468.0px, calc(-50% + 155.9px)); }
-    64% { transform: translate(499.2px, calc(-50% + 142.1px)); }
-    68% { transform: translate(530.4px, calc(-50% + 135.1px)); }
-    72% { transform: translate(561.6px, calc(-50% + 134.9px)); }
-    76% { transform: translate(592.8px, calc(-50% + 141.6px)); }
-    80% { transform: translate(624.0px, calc(-50% + 155.1px)); }
-    84% { transform: translate(655.2px, calc(-50% + 175.5px)); }
-    88% { transform: translate(686.4px, calc(-50% + 202.7px)); opacity: 1; }
-    92% { transform: translate(717.6px, calc(-50% + 236.7px)); }
-    96% { transform: translate(748.8px, calc(-50% + 277.6px)); }
-    100% { transform: translate(780.0px, calc(-50% + 325.4px)); opacity: 0; }
+    56% { transform: translate(436.8px, calc(-50% + 173.2px)); }
+    60% { transform: translate(468.0px, calc(-50% + 142.3px)); }
+    64% { transform: translate(499.2px, calc(-50% + 118.3px)); }
+    68% { transform: translate(530.4px, calc(-50% + 101.1px)); }
+    72% { transform: translate(561.6px, calc(-50% + 90.8px)); }
+    76% { transform: translate(592.8px, calc(-50% + 87.3px)); }
+    80% { transform: translate(624.0px, calc(-50% + 90.7px)); }
+    84% { transform: translate(655.2px, calc(-50% + 100.8px)); }
+    88% { transform: translate(686.4px, calc(-50% + 117.9px)); opacity: 1; }
+    92% { transform: translate(717.6px, calc(-50% + 141.7px)); }
+    96% { transform: translate(748.8px, calc(-50% + 172.4px)); }
+    100% { transform: translate(780.0px, calc(-50% + 210.0px)); opacity: 0; }
   }
   @keyframes vinyl-reland {
     0% { transform: translateY(-200%) rotate(-8deg); opacity: 0; }
@@ -749,7 +749,7 @@
     if (growing) {
       el.style.width = newW + "px";
     } else {
-      setTimeout(() => { el.style.width = newW + "px"; }, 460);  // shrink only once the wide name is crushed
+      setTimeout(() => { el.style.width = newW + "px"; }, 600);  // shrink only once the wide name is crushed
     }
     el.classList.add("dropping");
     setTimeout(() => {
@@ -761,7 +761,7 @@
       const bang = document.querySelector(".bang");
       if (bang) bang.classList.remove("grow", "shrink");
       dropping = false;
-    }, 740);
+    }, 840);
   });
 
   const shelf = document.querySelector(".shelf");
