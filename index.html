@@ -217,10 +217,14 @@
   .case.is-hot img {
     box-shadow: 12px 18px 34px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(0, 0, 0, 0.18);
   }
+  .case:first-child::after { left: 0; transform: translateX(0) scale(0.92); }
+  .case:last-child::after { left: auto; right: 0; transform: translateX(0) scale(0.92); }
   .case.is-hot::after {
     opacity: 1;
     transform: translateX(-50%) scale(1);
   }
+  .case:first-child.is-hot::after { transform: translateX(0) scale(1); }
+  .case:last-child.is-hot::after { transform: translateX(0) scale(1); }
   .case.is-hot::before { opacity: 1; }
 
   /* ---------- jams deck ---------- */
@@ -483,7 +487,7 @@
     .vinyl { width: 128px; height: 128px; right: 12px; }
     .case { margin-right: calc((100vw - 3rem - 92px) / 7 - 92px); }
     .case img { height: 138px; }
-    .shelf-wrap { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+    .shelf-wrap { overflow: hidden; }
     .shelf-wrap::-webkit-scrollbar { display: none; }
     .shelf { padding-top: 5.5rem; }
   }
