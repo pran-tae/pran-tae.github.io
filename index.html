@@ -69,6 +69,13 @@
     font-weight: 600;
   }
   .name-cycle:hover { color: var(--accent); }
+  .name-cycle.flip { animation: name-flip 280ms ease; }
+  @keyframes name-flip {
+    0% { transform: scaleY(1); }
+    45% { transform: scaleY(0.05); }
+    55% { transform: scaleY(0.05); }
+    100% { transform: scaleY(1); }
+  }
   .name-wrap { position: relative; display: inline-block; }
   .bubble {
     position: absolute;
@@ -487,9 +494,9 @@
     .vinyl { width: 128px; height: 128px; right: 12px; }
     .case { margin-right: calc((100vw - 3rem - 92px) / 7 - 92px); }
     .case img { height: 138px; }
-    .shelf-wrap { overflow: hidden; }
+    .shelf-wrap { overflow-x: clip; overflow-y: visible; }
     .shelf-wrap::-webkit-scrollbar { display: none; }
-    .shelf { padding-top: 5.5rem; }
+    .shelf { padding-top: 3rem; }
   }
   @media (max-width: 400px) {
     .deck-card { padding-right: 8.5rem; height: 146px; }
@@ -626,8 +633,13 @@
   const bubble = document.getElementById("nameBubble");
   el.addEventListener("click", () => {
     i = (i + 1) % names.length;
-    el.textContent = names[i];
-    bubble.classList.toggle("show", names[i] === "Term");
+    el.classList.remove("flip");
+    void el.offsetWidth;
+    el.classList.add("flip");
+    setTimeout(() => {
+      el.textContent = names[i];
+      bubble.classList.toggle("show", names[i] === "Term");
+    }, 130);
   });
 
   const shelf = document.querySelector(".shelf");
