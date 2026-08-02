@@ -612,6 +612,49 @@
       raf = (cursor || segs.length) ? requestAnimationFrame(draw) : 0;
     }
   })();
+
+  // live jams: poll Last.fm from the page so the deck updates while I listen
+  (() => {
+    const KEY = "b3fe55e942ea882c1642499692145109";
+    const USER = "term22";
+    const trackEl = document.querySelector(".track");
+    const artistEl = document.querySelector(".artist");
+    const label = document.querySelector(".disc-label");
+    let current = trackEl.textContent.trim() + "|" + artistEl.textContent.trim();
+    let timer = 0;
+
+    async function poll() {
+      try {
+        const res = await fetch("https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=" + USER + "&api_key=" + KEY + "&format=json&limit=1");
+        if (!res.ok) return;
+        const data = await res.json();
+        let t = data.recenttracks && data.recenttracks.track;
+        if (Array.isArray(t)) t = t[0];
+        if (!t) return;
+        const name = t.name;
+        const artist = t.artist["#text"];
+        if (!name || !artist) return;
+        const sig = name + "|" + artist;
+        if (sig === current) return;
+        current = sig;
+        trackEl.textContent = name;
+        artistEl.textContent = artist;
+        if (t.url) vinyl.href = t.url;
+        const imgs = (t.image || []).map((i) => i["#text"]).filter(Boolean);
+        if (imgs.length) {
+          label.classList.remove("default");
+          label.style.backgroundImage = "url('" + imgs[imgs.length - 1] + "')";
+        }
+        deck.classList.add("burst");
+        setTimeout(() => deck.classList.remove("burst"), 900);
+      } catch (e) { /* keep the baked deck */ }
+    }
+
+    function start() { if (!timer) { poll(); timer = setInterval(poll, 45000); } }
+    function stop() { clearInterval(timer); timer = 0; }
+    document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
+    start();
+  })();
 </script>
 </body>
 </html>
