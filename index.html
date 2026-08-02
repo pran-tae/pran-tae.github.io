@@ -890,6 +890,11 @@
     }
 
     function recenter() {
+      if (window.matchMedia("(max-width: 560px)").matches) {
+        shelfEl.style.transform = "";          // mobile fills the container by construction
+        shelfEl.style.setProperty("--recenter", "0px");
+        return;
+      }
       requestAnimationFrame(() => {
         const wrap = shelfEl.parentElement.getBoundingClientRect();
         let area = 0;
@@ -935,8 +940,6 @@
     lastFocus = [0, false];
     snapRefan();
     recenter();
-    setTimeout(remeasure, 350);    // settle passes: invisible, the shelf is below the fold
-    setTimeout(remeasure, 1200);
     if (touch) {
       caseEls.forEach((c, i) => {
         c.addEventListener("click", (e) => {
