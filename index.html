@@ -145,7 +145,7 @@
   .muted { color: var(--muted); }
 
   /* ---------- sections ---------- */
-  section { display: flex; flex-direction: column; gap: 0.9rem; }
+  section { display: flex; flex-direction: column; gap: 0.9rem; position: relative; }
   .label {
     font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     font-size: 0.6875rem;
@@ -222,8 +222,6 @@
   }
   .pill {
     position: absolute;
-    top: -30px;
-    left: 0;
     background: var(--ink);
     color: var(--ground);
     font-size: 0.72rem;
@@ -655,9 +653,9 @@
         <a class="case" style="--n:6;--z:2" href="https://letterboxd.com/term_2222/film/the-truman-show/" data-title="The Truman Show" data-stars="★★★★½" target="_blank" rel="noopener"><img src="assets/posters/p7.jpg?v=834b3597" alt="The Truman Show poster"></a>
         <a class="case" style="--n:7;--z:1" href="https://letterboxd.com/term_2222/film/se7en/" data-title="Se7en" data-stars="★★★★" target="_blank" rel="noopener"><img src="assets/posters/p8.jpg?v=b03cbe4f" alt="Se7en poster"></a>
 <!-- SHELF:END -->
-        <div class="pill" aria-hidden="true"></div>
       </div>
     </div>
+    <div class="pill" aria-hidden="true"></div>
   </section>
 
   <section>
@@ -780,10 +778,14 @@
           pill._t = setTimeout(() => {
             pill.textContent = (c.dataset.title || "") + "  " + (c.dataset.stars || "");
             const r = c.getBoundingClientRect();
-            const sr = shelfEl.getBoundingClientRect();
-            const center = r.left + r.width / 2 - sr.left;
+            const secR = shelfEl.closest("section").getBoundingClientRect();
             const pw = pill.offsetWidth;
-            pill.style.left = Math.max(2, Math.min(center - pw / 2, sr.width - pw - 2)) + "px";
+            const ph = pill.offsetHeight;
+            // clamp against the viewport, not the clipped shelf
+            let pageLeft = r.left + r.width / 2 - pw / 2;
+            pageLeft = Math.max(8, Math.min(pageLeft, window.innerWidth - pw - 8));
+            pill.style.left = (pageLeft - secR.left) + "px";
+            pill.style.top = (r.top - secR.top - ph - 9) + "px";
             pill.classList.add("show");
           }, 180);
         } else {
