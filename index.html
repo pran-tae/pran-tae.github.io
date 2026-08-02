@@ -128,8 +128,7 @@
   .ledger .dots {
     flex: 1;
     border-bottom: 1px dotted var(--leader);
-    transform: translateY(-4px);
-    min-width: 1.5rem;
+    min-width: 2.5rem;
   }
   .ledger .when {
     font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -161,9 +160,15 @@
     margin-right: -40px;
     transform: rotateY(-35deg);
     transform-origin: left center;
-    transition: transform 220ms ease;
+    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
     border-radius: 3px;
     z-index: var(--z);
+    animation: case-in 480ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(var(--n) * 70ms);
+  }
+  @keyframes case-in {
+    from { opacity: 0; transform: rotateY(-55deg) translateY(16px); }
+    to { opacity: 1; transform: rotateY(-35deg) translateY(0); }
   }
   .case img {
     display: block;
@@ -171,6 +176,7 @@
     height: calc(188px - var(--n) * 11px);
     border-radius: 3px;
     box-shadow: 6px 8px 18px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.18);
+    transition: box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1);
   }
   .case::after {
     content: attr(data-title) " · " attr(data-stars);
@@ -187,8 +193,11 @@
     pointer-events: none;
   }
   .case:hover, .case:focus-visible {
-    transform: rotateY(-9deg) translateY(-8px);
+    transform: rotateY(-8deg) translateY(-10px) scale(1.03);
     z-index: 20;
+  }
+  .case:hover img, .case:focus-visible img {
+    box-shadow: 10px 16px 30px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(0, 0, 0, 0.18);
   }
   .case:hover::after, .case:focus-visible::after { opacity: 1; }
 
@@ -279,7 +288,7 @@
     border-radius: 50%;
     background:
       radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.12), transparent 55%),
-      repeating-radial-gradient(circle at center, #142A19 0 2px, #2F5A38 2px 4.5px);
+      repeating-radial-gradient(circle at center, #172E1D 0 2px, #295231 2px 4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -327,8 +336,19 @@
   @media (max-width: 560px) {
     .deck-card { padding-right: 9.5rem; min-height: 160px; }
     .vinyl { width: 128px; height: 128px; right: 12px; }
+    .case { margin-right: -32px; }
+    .case img { height: calc(150px - var(--n) * 9px); }
   }
-  @media (prefers-reduced-motion: reduce) { .disc { animation: none; } }
+  @media (max-width: 400px) {
+    .deck-card { padding-right: 8rem; min-height: 150px; }
+    .vinyl { width: 108px; height: 108px; right: 10px; }
+    .track { font-size: 1.15rem; }
+  }
+  @media (max-width: 480px) {
+    .ledger .dots { display: none; }
+    .ledger li { justify-content: space-between; }
+  }
+  @media (prefers-reduced-motion: reduce) { .disc { animation: none; } .case { animation: none; } }
 
   /* ---------- footer ---------- */
   footer {
