@@ -968,9 +968,18 @@
     if (energy >= 5) {
       fallen = true;
       deck.classList.add("fallen");
+      const fr = vinyl.getBoundingClientRect();
+      vinyl.style.position = "fixed";        // airborne: can't stretch the page
+      vinyl.style.left = fr.left + "px";
+      vinyl.style.top = (fr.top + fr.height / 2) + "px";
+      vinyl.style.right = "auto";
       vinyl.classList.add("falloff");
       setTimeout(() => {
         energy = 0;
+        vinyl.style.position = "";
+        vinyl.style.left = "";
+        vinyl.style.top = "";
+        vinyl.style.right = "";
         vinyl.classList.remove("falloff");
         vinyl.classList.add("reland");
       }, 1900);
