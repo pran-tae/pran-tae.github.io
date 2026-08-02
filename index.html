@@ -906,7 +906,13 @@
         shelfEl.style.transform = "translateX(" + dx.toFixed(1) + "px)";
       });
     }
-    function remeasure() { measure(); refan(lastFocus[0], lastFocus[1]); recenter(); setTimeout(recenter, 520); }
+    function snapRefan() {
+      caseEls.forEach((c) => { c.style.transition = "none"; });
+      refan(lastFocus[0], lastFocus[1]);
+      void shelfEl.offsetWidth;
+      caseEls.forEach((c) => { c.style.transition = ""; });
+    }
+    function remeasure() { measure(); snapRefan(); recenter(); }
     measure();
     window.addEventListener("resize", remeasure);
     window.addEventListener("load", remeasure);
@@ -915,9 +921,9 @@
       if (im && !im.complete) im.addEventListener("load", remeasure);
     });
 
-    refan(0, false);
+    lastFocus = [0, false];
+    snapRefan();
     recenter();
-    setTimeout(recenter, 520);
     if (touch) {
       caseEls.forEach((c, i) => {
         c.addEventListener("click", (e) => {
