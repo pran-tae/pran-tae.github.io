@@ -24,6 +24,7 @@ jobs:
           if ! git diff --quiet; then
             git add -A
             git commit -m "Refresh flicks and jams"
+            git pull --rebase origin main
             git push
           else
             echo "No changes."

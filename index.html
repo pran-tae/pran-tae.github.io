@@ -228,32 +228,35 @@
     position: relative;
     margin-top: 2.6rem;
   }
-  .turntable {
+  .platter {
     position: absolute;
     top: 50%;
-    right: 6px;
+    right: 4px;
     transform: translateY(-50%);
-    width: 168px;
-    height: 168px;
-    border: 1px solid var(--rule);
-    border-radius: 12px;
-    background-color: var(--ground);
-    background-image: radial-gradient(circle at 50% 50%, #1E2F22 0 77px, transparent 77.5px);
+    width: 172px;
+    height: 172px;
+    border-radius: 50%;
+    background-image:
+      radial-gradient(circle at 50% 50%, #1B2A1F 0 74px, transparent 74.5px),
+      repeating-conic-gradient(from 0deg, rgba(251, 250, 247, 0.4) 0deg 1.6deg, transparent 1.6deg 7.2deg);
+    background-color: #24382A;
+    box-shadow: 0 5px 14px rgba(20, 30, 20, 0.22), inset 0 0 0 1px rgba(0, 0, 0, 0.28);
     z-index: 1;
     pointer-events: none;
-    box-shadow: 0 3px 10px rgba(20, 30, 20, 0.07);
+    animation: spin 3.62s linear infinite;
   }
-  .turntable::after {
+  .deck-card::after {
     content: "";
     position: absolute;
-    right: 9px;
-    bottom: 9px;
+    left: 1.5rem;
+    bottom: 14px;
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: var(--accent);
     animation: led 2.4s ease-in-out infinite;
   }
+  .deck-card { position: relative; }
   @keyframes led { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
   .sleeve {
     position: absolute;
@@ -267,11 +270,14 @@
       radial-gradient(circle at 50% 50%, transparent 32px, var(--rule) 33px, transparent 34.5px);
     border: 1px solid var(--rule);
     border-radius: 8px;
-    transform: rotate(7deg);
+    transform: rotate(7deg) translateY(-8px);
     z-index: 42;
     pointer-events: none;
     box-shadow: 0 5px 12px rgba(20, 30, 20, 0.10);
+    opacity: 0;
+    transition: opacity 320ms ease, transform 320ms ease;
   }
+  .deck.swapping .sleeve { opacity: 1; transform: rotate(7deg) translateY(0); }
   .deck-card {
     border: 1px solid var(--rule);
     border-radius: 14px;
@@ -319,11 +325,11 @@
   @keyframes shuffle-out {
     0% { transform: translateY(-50%); }
     30% { transform: translateY(-58%) translateX(-10px) rotate(-6deg); }
-    100% { transform: translateY(calc(-50% - 140px)) translateX(40px) rotate(9deg) scale(0.72); }
+    100% { transform: translate(var(--sx, 40px), calc(-50% + var(--sy, -86px))) rotate(9deg) scale(var(--ss, 0.72)); }
   }
   @keyframes shuffle-in {
-    0% { transform: translateY(calc(-50% - 140px)) translateX(40px) rotate(9deg) scale(0.72); }
-    45% { transform: translateY(calc(-50% - 58px)) translateX(10px) rotate(-3deg) scale(0.9); }
+    0% { transform: translate(var(--sx, 40px), calc(-50% + var(--sy, -86px))) rotate(9deg) scale(var(--ss, 0.72)); }
+    45% { transform: translate(calc(var(--sx, 40px) * 0.3), calc(-50% + var(--sy, -86px) * 0.45)) rotate(-3deg) scale(0.9); }
     85% { transform: translateY(-47%) rotate(-1deg) scale(1.01); }
     100% { transform: translateY(-50%); }
   }
@@ -337,12 +343,12 @@
   @media (max-width: 560px) {
     .vinyl-ghost { width: 128px; height: 128px; right: 12px; }
     .sleeve { width: 100px; height: 100px; top: -44px; }
-    .turntable { width: 146px; height: 146px; right: 3px; background-image: radial-gradient(circle at 50% 50%, #1E2F22 0 67px, transparent 67.5px); }
+    .platter { width: 148px; height: 148px; right: 2px; background-image: radial-gradient(circle at 50% 50%, #1B2A1F 0 63px, transparent 63.5px), repeating-conic-gradient(from 0deg, rgba(251, 250, 247, 0.4) 0deg 1.6deg, transparent 1.6deg 7.2deg); }
   }
   @media (max-width: 400px) {
     .vinyl-ghost { width: 108px; height: 108px; right: 10px; }
     .sleeve { width: 88px; height: 88px; top: -38px; }
-    .turntable { width: 124px; height: 124px; right: 2px; background-image: radial-gradient(circle at 50% 50%, #1E2F22 0 57px, transparent 57.5px); }
+    .platter { width: 126px; height: 126px; right: 1px; background-image: radial-gradient(circle at 50% 50%, #1B2A1F 0 53px, transparent 53.5px), repeating-conic-gradient(from 0deg, rgba(251, 250, 247, 0.4) 0deg 1.6deg, transparent 1.6deg 7.2deg); }
   }
   .disc {
     position: relative;
@@ -417,7 +423,7 @@
     .vinyl { width: 108px; height: 108px; right: 10px; }
     .track { font-size: 1.15rem; }
   }
-  @media (prefers-reduced-motion: reduce) { .disc { animation: none; } .shelf.in .case { animation: none; } .turntable::after { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .disc { animation: none; } .shelf.in .case { animation: none; } .platter { animation: none; } .deck-card::after { animation: none; } }
 
   /* ---------- footer ---------- */
   footer {
@@ -516,7 +522,7 @@
 <!-- JAM:END -->
         </div>
       </div>
-      <div class="turntable" aria-hidden="true"></div>
+      <div class="platter" aria-hidden="true"></div>
       <div class="sleeve" aria-hidden="true"></div>
       <a class="vinyl" href="https://www.last.fm/music/Gustav+Mahler/_/Symphony+No.+2+%22Resurrection%22:+V.+Finale:+g.+Sehr+langsam+und+gedehnt+-+Live" target="_blank" rel="noopener" aria-label="Open this track on Last.fm">
         <div class="disc">
@@ -754,6 +760,13 @@
         };
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { applyMedia(); applyText(); return; }
         const info = document.querySelector(".deck-info");
+        const sleeveEl = deck.querySelector(".sleeve");
+        const vr = vinyl.getBoundingClientRect();
+        const sr = sleeveEl.getBoundingClientRect();
+        deck.style.setProperty("--sx", (sr.left + sr.width / 2 - (vr.left + vr.width / 2)).toFixed(1) + "px");
+        deck.style.setProperty("--sy", (sr.top + sr.height / 2 - (vr.top + vr.height / 2)).toFixed(1) + "px");
+        deck.style.setProperty("--ss", (sr.width / vr.width * 0.88).toFixed(2));
+        deck.classList.add("swapping");
         const ghost = document.createElement("div");
         ghost.className = "vinyl-ghost";
         ghost.appendChild(vinyl.querySelector(".disc").cloneNode(true));
@@ -770,6 +783,7 @@
           ghost.remove();
           vinyl.classList.remove("load");
           info.classList.remove("swap");
+          deck.classList.remove("swapping");
         }, 2400);
       } catch (e) { /* keep the baked deck */ }
     }
