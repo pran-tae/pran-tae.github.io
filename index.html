@@ -703,6 +703,7 @@
 
     const pillEl = () => shelfEl.querySelector(".pill");
     function refan(h, hot) {
+      measure();
       hot = hot === undefined ? true : hot;
       lastFocus = [h, hot];
       const pill = pillEl();
@@ -734,11 +735,17 @@
           if (mobile && i === 0 && shift < -2) shift = -2;
           tx += shift;
         }
-        if (hot && i === h && mobile) {
-          if (i === 0) tx += 12;                        // grown edge cases tuck inside the clip
-          else if (i === caseEls.length - 1) tx -= 12;
-        }
         const focusScale = 1.06;
+        if (hot && i === h && mobile) {
+          // exact clamp: the grown case must sit inside the clipped container
+          const sw = shelfEl.clientWidth;
+          const L = centers[i] - halfW + sw * ORIGIN_X;
+          const grow = halfW * (focusScale - 1);
+          const over = L + halfW * 2 + tx + grow - (sw - 2);
+          if (over > 0) tx -= over;
+          const under = 2 - (L + tx - grow);
+          if (under > 0) tx += under;
+        }
         let t = "translateX(" + tx.toFixed(1) + "px) translateZ(" + -z + "px)";
         if (i < h) t += " rotateY(10deg)";
         else if (i > h) t += " rotateY(-14deg)";
