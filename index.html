@@ -512,18 +512,18 @@
     setTimeout(() => deck.classList.remove("burst"), 900);
   });
 
-  // touching the grooves leaves a mark that rides the spinning record
+  // touching the grooves leaves a soft trail that fades
   (() => {
-    const disc = vinyl.querySelector(".disc");
     const canvas = document.createElement("canvas");
     canvas.className = "groove-marks";
-    disc.insertBefore(canvas, disc.firstChild);
+    vinyl.appendChild(canvas);
     const ctx = canvas.getContext("2d");
-    let marks = [];
+    let segs = [];
+    let last = null;
     let raf = 0;
 
     function size() {
-      const d = disc.clientWidth;
+      const d = vinyl.clientWidth;
       const dpr = window.devicePixelRatio || 1;
       canvas.width = d * dpr;
       canvas.height = d * dpr;
@@ -532,37 +532,41 @@
     size();
     window.addEventListener("resize", size);
 
-    function discAngle() {
-      const t = getComputedStyle(disc).transform;
-      if (!t || t === "none") return 0;
-      const m = t.match(/matrix\(([-\d.e]+), ([-\d.e]+)/);
-      return m ? Math.atan2(parseFloat(m[2]), parseFloat(m[1])) : 0;
-    }
-
+    vinyl.addEventListener("pointerleave", () => { last = null; });
     vinyl.addEventListener("pointermove", (e) => {
-      const r = disc.getBoundingClientRect();
+      const r = vinyl.getBoundingClientRect();
       const R = r.width / 2;
-      const dx = e.clientX - (r.left + R);
-      const dy = e.clientY - (r.top + R);
-      const dist = Math.hypot(dx, dy);
-      if (dist < R * 0.36 || dist > R * 0.985) return; // grooves only
-      const a = Math.atan2(dy, dx) - discAngle();      // into the record's rotating frame
-      marks.push({ x: R + dist * Math.cos(a), y: R + dist * Math.sin(a), t: performance.now() });
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      const dist = Math.hypot(x - R, y - R);
+      if (dist < R * 0.36 || dist > R * 0.99) { last = null; return; }
+      if (last) segs.push({ x1: last.x, y1: last.y, x2: x, y2: y, t: performance.now() });
+      last = { x, y };
       if (!raf) raf = requestAnimationFrame(draw);
     });
 
     function draw(now) {
-      const R = disc.clientWidth / 2;
+      const R = vinyl.clientWidth / 2;
       ctx.clearRect(0, 0, R * 2, R * 2);
-      marks = marks.filter((m) => now - m.t < 1600);
-      for (const m of marks) {
-        const life = 1 - (now - m.t) / 1600;
+      ctx.save();
+      ctx.beginPath();                     // clip to the groove ring
+      ctx.arc(R, R, R * 0.985, 0, Math.PI * 2);
+      ctx.arc(R, R, R * 0.345, 0, Math.PI * 2, true);
+      ctx.clip("evenodd");
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      segs = segs.filter((g) => now - g.t < 900);
+      for (const g of segs) {
+        const life = 1 - (now - g.t) / 900;
         ctx.beginPath();
-        ctx.arc(m.x, m.y, 2.4, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(216, 236, 216, ${0.34 * life})`;
-        ctx.fill();
+        ctx.moveTo(g.x1, g.y1);
+        ctx.lineTo(g.x2, g.y2);
+        ctx.strokeStyle = `rgba(219, 238, 219, ${0.38 * life * life})`;
+        ctx.lineWidth = 3 * life;
+        ctx.stroke();
       }
-      raf = marks.length ? requestAnimationFrame(draw) : 0;
+      ctx.restore();
+      raf = segs.length ? requestAnimationFrame(draw) : 0;
     }
   })();
 </script>
