@@ -73,26 +73,26 @@
   .nc-old { display: inline-block; transform-origin: 50% 100%; }
   .nc-new {
     position: absolute;
-    left: 50%;
+    left: 0;
     bottom: 0;
-    transform: translate(-50%, -1.3em);
+    transform: translateY(-1.3em);
     opacity: 0;
     transform-origin: 50% 100%;
     white-space: nowrap;
     pointer-events: none;
   }
   .name-cycle.dropping .nc-new { animation: nc-drop 520ms cubic-bezier(0.4, 0.02, 0.62, 1) forwards; }
-  .name-cycle.dropping .nc-old { animation: nc-crush 200ms ease-in 290ms forwards; }
+  .name-cycle.dropping .nc-old { animation: nc-crush 130ms ease-in 300ms forwards; }
   @keyframes nc-drop {
-    0% { transform: translate(-50%, -1.3em) scaleY(1); opacity: 0; }
+    0% { transform: translateY(-1.3em) scaleY(1); opacity: 0; }
     20% { opacity: 1; }
-    62% { transform: translate(-50%, 0.1em) scaleY(0.78); opacity: 1; }
-    80% { transform: translate(-50%, -0.08em) scaleY(1.08); opacity: 1; }
-    100% { transform: translate(-50%, 0) scaleY(1); opacity: 1; }
+    62% { transform: translateY(0.1em) scaleY(0.78); opacity: 1; }
+    80% { transform: translateY(-0.08em) scaleY(1.08); opacity: 1; }
+    100% { transform: translateY(0) scaleY(1); opacity: 1; }
   }
   @keyframes nc-crush {
-    0% { transform: scaleY(1); }
-    100% { transform: scaleY(0.04); opacity: 0.4; }
+    0% { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(0.04); opacity: 0; }
   }
   .name-wrap { position: relative; display: inline-block; }
   .bubble {
