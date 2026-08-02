@@ -147,15 +147,16 @@
   .shelf {
     display: flex;
     align-items: flex-end;
+    justify-content: center;
     perspective: 1100px;
-    perspective-origin: 18% 60%;
+    perspective-origin: 50% 60%;
     padding-top: 3.4rem;
     min-width: min-content;
   }
   .case {
     flex: none;
     position: relative;
-    margin-right: -46px;
+    margin-right: -50px;
     transform: rotateY(-35deg);
     transform-origin: 50% 85%;
     transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -172,14 +173,14 @@
     from { opacity: 0; transform: rotateY(-55deg) translateY(16px); }
     to { opacity: 1; }
   }
-  .case:nth-child(1) { --h: 172px; }
-  .case:nth-child(2) { --h: 154px; }
-  .case:nth-child(3) { --h: 144px; }
-  .case:nth-child(4) { --h: 136px; }
-  .case:nth-child(5) { --h: 129px; }
-  .case:nth-child(6) { --h: 123px; }
-  .case:nth-child(7) { --h: 118px; }
-  .case:nth-child(8) { --h: 114px; }
+  .case:nth-child(1) { --h: 192px; }
+  .case:nth-child(2) { --h: 172px; }
+  .case:nth-child(3) { --h: 160px; }
+  .case:nth-child(4) { --h: 150px; }
+  .case:nth-child(5) { --h: 142px; }
+  .case:nth-child(6) { --h: 135px; }
+  .case:nth-child(7) { --h: 129px; }
+  .case:nth-child(8) { --h: 124px; }
   .case:first-child { transform: rotateY(-18deg); }
   .case img {
     display: block;
@@ -326,7 +327,7 @@
   @media (max-width: 560px) {
     .deck-card { padding-right: 9.5rem; min-height: 160px; }
     .vinyl { width: 128px; height: 128px; right: 12px; }
-    .case { margin-right: -34px; }
+    .case { margin-right: -38px; }
     .case img { height: calc(var(--h) * 0.82); }
     .shelf-wrap { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
     .shelf-wrap::-webkit-scrollbar { display: none; }
