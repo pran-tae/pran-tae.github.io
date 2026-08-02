@@ -220,22 +220,25 @@
     pointer-events: none;
     z-index: 30;
   }
-  .case:hover, .case:focus-visible {
+  .case:hover, .case:focus-visible, .case.focused {
     transform: rotateY(-2deg) translateY(-16px) scale(1.14);
     z-index: 20;
   }
-  .case:hover img, .case:focus-visible img {
+  .case:hover img, .case:focus-visible img, .case.focused img {
     box-shadow: 12px 18px 34px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(0, 0, 0, 0.18);
   }
   .shelf:has(.case:hover) .case:not(:hover) {
     filter: brightness(0.88) saturate(0.92);
   }
+  .shelf:has(.case.focused) .case:not(.focused) {
+    filter: brightness(0.88) saturate(0.92);
+  }
   .case img { transition: box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1), filter 260ms ease; }
-  .case:hover::after, .case:focus-visible::after {
+  .case:hover::after, .case:focus-visible::after, .case.focused::after {
     opacity: 1;
     transform: translateX(-50%) scale(1);
   }
-  .case:hover::before, .case:focus-visible::before { opacity: 1; }
+  .case:hover::before, .case:focus-visible::before, .case.focused::before { opacity: 1; }
 
   /* ---------- jams deck ---------- */
   .deck {
@@ -484,6 +487,22 @@
     io.observe(shelf);
   } else if (shelf) {
     shelf.classList.add("in");
+  }
+
+  if (window.matchMedia("(hover: none)").matches) {
+    const cases = Array.from(document.querySelectorAll(".case"));
+    cases.forEach((c) => {
+      c.addEventListener("click", (e) => {
+        if (!c.classList.contains("focused")) {
+          e.preventDefault();
+          cases.forEach((o) => o.classList.remove("focused"));
+          c.classList.add("focused");
+        }
+      });
+    });
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".case")) cases.forEach((o) => o.classList.remove("focused"));
+    });
   }
 
   const deck = document.getElementById("deck");
