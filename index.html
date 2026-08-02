@@ -124,15 +124,8 @@
   /* ---------- ledger rows ---------- */
   ul.ledger { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; }
   .ledger li { display: flex; flex-direction: column; gap: 0.1rem; }
-  .ledger .line { display: flex; align-items: baseline; gap: 0.6rem; }
+  .ledger .line { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
   .ledger .who { flex-shrink: 1; min-width: 0; }
-  .ledger .dots {
-    flex: 1;
-    align-self: flex-end;
-    margin-bottom: 10px;
-    border-bottom: 1px dotted var(--leader);
-    min-width: 2.5rem;
-  }
   .ledger .when {
     font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     font-size: 0.75rem;
@@ -388,10 +381,6 @@
     .vinyl { width: 108px; height: 108px; right: 10px; }
     .track { font-size: 1.15rem; }
   }
-  @media (max-width: 480px) {
-    .ledger .dots { display: none; }
-    .ledger .line { justify-content: space-between; }
-  }
   @media (prefers-reduced-motion: reduce) { .disc { animation: none; } .shelf.in .case { animation: none; } }
 
   /* ---------- footer ---------- */
@@ -436,27 +425,27 @@
     <h2 class="label"><span class="mark">✳</span> Work</h2>
     <ul class="ledger">
       <li>
-        <span class="line"><span class="who"><a href="https://www.conduit.ai" target="_blank" rel="noopener">Conduit</a> · engineering</span><span class="dots"></span><span class="when">2026</span></span>
+        <span class="line"><span class="who"><a href="https://www.conduit.ai" target="_blank" rel="noopener">Conduit</a> · engineering</span><span class="when">2026</span></span>
         <span class="sub">agentic ops, messaging channels, translation, smart locks</span>
       </li>
       <li>
-        <span class="line"><span class="who"><a href="https://ai-analytics.wharton.upenn.edu/" target="_blank" rel="noopener">Wharton Analytics</a> · technical lead</span><span class="dots"></span><span class="when">2024–</span></span>
+        <span class="line"><span class="who"><a href="https://ai-analytics.wharton.upenn.edu/" target="_blank" rel="noopener">Wharton Analytics</a> · technical lead</span><span class="when">2024–</span></span>
         <span class="sub">pricing for ShiftKey, forecasting for RxSense, funnels for IKEA</span>
       </li>
       <li>
-        <span class="line"><span class="who"><a href="https://www.linkedin.com/company/infinitas-by-krungthai" target="_blank" rel="noopener">Infinitas by Krungthai</a> · data science</span><span class="dots"></span><span class="when">2025</span></span>
+        <span class="line"><span class="who"><a href="https://www.linkedin.com/company/infinitas-by-krungthai" target="_blank" rel="noopener">Infinitas by Krungthai</a> · data science</span><span class="when">2025</span></span>
         <span class="sub">ad allocation policy, multilingual banking Q&amp;A</span>
       </li>
       <li>
-        <span class="line"><span class="who"><a href="https://lmwn.com/" target="_blank" rel="noopener">LINE MAN Wongnai</a> · credit risk</span><span class="dots"></span><span class="when">2024</span></span>
+        <span class="line"><span class="who"><a href="https://lmwn.com/" target="_blank" rel="noopener">LINE MAN Wongnai</a> · credit risk</span><span class="when">2024</span></span>
         <span class="sub">loan default models for merchants</span>
       </li>
       <li>
-        <span class="line"><span class="who">Penn · teaching</span><span class="dots"></span><span class="when">2024–</span></span>
+        <span class="line"><span class="who">Penn · teaching</span><span class="when">2024–</span></span>
         <span class="sub">Big Data Analytics TA; Fixed Income head TA</span>
       </li>
       <li>
-        <span class="line"><span class="who">Penn Spark · project lead</span><span class="dots"></span><span class="when">2024–</span></span>
+        <span class="line"><span class="who">Penn Spark · project lead</span><span class="when">2024–</span></span>
         <span class="sub">Penn.Place, a community-driven 3D pixel canvas</span>
       </li>
     </ul>
