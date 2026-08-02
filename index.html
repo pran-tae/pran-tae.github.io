@@ -711,7 +711,7 @@
           if (i === 0) tx += 12;                        // grown edge cases tuck inside the clip
           else if (i === caseEls.length - 1) tx -= 12;
         }
-        const focusScale = mobile ? 1.1 : 1.16;
+        const focusScale = 1.06;
         let t = "translateX(" + tx.toFixed(1) + "px) translateZ(" + -z + "px)";
         if (i < h) t += " rotateY(10deg)";
         else if (i > h) t += " rotateY(-14deg)";
