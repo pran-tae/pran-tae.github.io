@@ -228,7 +228,7 @@
     box-sizing: border-box;
     opacity: 0;
     transform: scale(0.92);
-    transition: opacity 160ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1), left 200ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: opacity 160ms ease, transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
     pointer-events: none;
     z-index: 30;
   }
@@ -727,14 +727,19 @@
       lastFocus = [h, hot];
       const pill = pillEl();
       if (pill) {
+        if (pill._t) clearTimeout(pill._t);
         if (hot) {
           const c = caseEls[h];
-          pill.textContent = (c.dataset.title || "") + "  " + (c.dataset.stars || "");
-          const center = centers[h] + ox;   // focused case is untransformed: layout center is final
-          const sw = shelfEl.clientWidth;
-          const pw = pill.offsetWidth;
-          pill.style.left = Math.max(2, Math.min(center - pw / 2, sw - pw - 2)) + "px";
-          pill.classList.add("show");
+          pill.classList.remove("show");
+          pill._t = setTimeout(() => {
+            pill.textContent = (c.dataset.title || "") + "  " + (c.dataset.stars || "");
+            const r = c.getBoundingClientRect();
+            const sr = shelfEl.getBoundingClientRect();
+            const center = r.left + r.width / 2 - sr.left;
+            const pw = pill.offsetWidth;
+            pill.style.left = Math.max(2, Math.min(center - pw / 2, sr.width - pw - 2)) + "px";
+            pill.classList.add("show");
+          }, 430);
         } else {
           pill.classList.remove("show");
         }
