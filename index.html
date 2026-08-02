@@ -349,7 +349,7 @@
   }
   .deck-info { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
   .track {
-    font-size: 1.35rem;
+    font-size: 1.2rem;
     margin: 0;
     line-height: 1.25;
     display: -webkit-box;
@@ -357,7 +357,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  .artist { margin: 0; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .artist { margin: 0; color: var(--muted); font-size: 0.9375rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .vinyl {
     position: absolute;
     top: 50%;
@@ -478,17 +478,19 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   @media (max-width: 560px) {
     .deck-card { padding-right: 10.5rem; height: 168px; }
+    .track { font-size: 1rem; }
+    .artist { font-size: 0.875rem; }
     .vinyl { width: 128px; height: 128px; right: 12px; }
-    .case { margin-right: -58px; }
-    .case img { height: 150px; }
+    .case { margin-right: -56px; }
+    .case img { height: 138px; }
     .shelf-wrap { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
     .shelf-wrap::-webkit-scrollbar { display: none; }
-    .shelf { padding-top: 3rem; }
+    .shelf { padding-top: 5.5rem; }
   }
   @media (max-width: 400px) {
     .deck-card { padding-right: 8.5rem; height: 146px; }
     .vinyl { width: 108px; height: 108px; right: 10px; }
-    .track { font-size: 1.15rem; }
+    .track { font-size: 0.9rem; }
   }
   @media (prefers-reduced-motion: reduce) { .disc { animation: none; } .shelf.in .case { animation: none; } .tt-led { animation: none; } }
 
